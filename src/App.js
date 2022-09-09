@@ -1,0 +1,57 @@
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./Components/Home/Home";
+import ServiceState from "./Context/services/ServiceState";
+import Creators_login from "./Components/Login/Creators/Creators_login";
+import Profile from "./Components/Creator Profile/Profile";
+import CreatorState from './Context/CreatorState';
+import UserState from './Context/UserState';
+import Service from "./Components/Service Page/Service";
+import {useState} from "react"
+import LoadingBar from 'react-top-loading-bar'
+import Feedback from "./Components/Feedback/Feedback";
+import LinkedinState from "./Context/LinkedinState";
+import FeedbackState from "./Context/FeedbackState"
+
+function App() {
+  const [progress, setprogress] = useState(0)
+
+  const changeprogress= (progress) =>{
+    setprogress(progress)
+  }
+  
+  
+  
+  return (
+    <Router>
+    
+    <LinkedinState>
+    <ServiceState>
+       <CreatorState> 
+         <UserState> 
+          <FeedbackState>
+         <LoadingBar
+        color='#f11946'
+        progress={progress}
+      />
+        <Routes>
+          <Route path="*" element={<Home progress={changeprogress}/>}></Route>    
+          <Route exact path="/creator/:slug" element={<Profile progress={changeprogress}/>}></Route>   
+          <Route path="/service/:slug" element={<Service progress={changeprogress}/>}></Route>  
+          <Route path="/feedback/:id" element={<Feedback progress={changeprogress}/>}></Route>  
+          <Route path="/login">
+            <Route path="creators" element={<Creators_login  progress={changeprogress}/>}/>
+          </Route>
+        </Routes>
+
+        </FeedbackState>
+     </UserState> 
+       </CreatorState> 
+    </ServiceState>
+       </LinkedinState>
+      </Router>
+  )
+}
+
+
+export default App;

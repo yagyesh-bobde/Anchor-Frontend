@@ -1,0 +1,167 @@
+.creator_login{
+    width: 100vw;
+    height: 100vh;
+    background-color: #eeeeee;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+}
+
+.creator_login_header{
+    width: 100vw;
+    background-color: white;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.creator_login_header img{
+    position: relative;
+    left: 6vw;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.creator_login_header button{
+    width: 202px;
+    height: 38px;
+    font-size: 1.2rem;
+    background-color: white;
+    border: 1px solid red;
+    color: red;
+    font-weight: 500;
+    border-radius: 10px;
+    position: relative;
+    right: 5vw;
+}
+
+.or_section{
+    font-size: 1.3rem;
+    color: rgba(141, 135, 135, 0.868);
+    
+    display: flex;
+    align-items: center;
+    
+}
+
+.or_section hr{
+    width: 13vw;
+    height: 1px;
+    background-color: rgba(141, 135, 135, 0.701);
+    position: relative;
+    top: 4px;
+    margin: 0 8px;
+}
+
+
+.main_page_login{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100vw;
+}
+
+
+.gyan_container{
+    font-size: 2.8rem;
+    position: relative;
+    width: 50vw;
+    top: -11vh;
+    font-weight: bold;
+}
+
+.login_container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: white;
+    width: 35vw;
+    height: 77vh;
+    position: relative;
+    top: -3rem;
+    border-radius: 43px;
+    
+}
+
+.login_container h2{
+    font-size: 1.7rem;
+}
+
+.login_container form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center ;
+    width: 100%;
+
+}
+
+.login_container button{
+    width: 87%;
+    height: 50px;
+    background-color: white;
+    color: blue;
+    border: 1px solid blue;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    text-align: left;
+    padding-left: 40px;
+    padding-right: 25px;
+    cursor: pointer;
+}
+
+.login_container button i{
+    margin-right: 35px;
+}
+
+.input_cred{
+    width: 78%;
+    height: 47px;
+    background-color: white;
+    border: 1px solid rgba(99, 99, 105, 0.755);
+    border-radius: 10px;
+    font-size: 1.2rem;
+    text-align: left;
+    padding-left: 30px;
+    padding-right: 25px;
+}
+
+.input_cred{
+    margin-bottom: 30px;
+}
+
+.login_container input[type=checkbox]{
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.login_check{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    left: -10vw;
+    top: -3vh;
+}
+
+.login_check label{
+    font-size: 1.2rem;
+    margin-left: 12px;
+    color: rgb(106, 104, 104);
+
+}
+
+.login_submit{
+    width: 88%;
+    height: 57px;
+    font-size: 1.2rem;
+    text-align: center;
+    border: 2px solid red;
+    border-radius: 10px;
+    background-color: white;
+    cursor: pointer;
+    color: red;
+}

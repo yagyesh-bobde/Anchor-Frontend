@@ -1,0 +1,261 @@
+import React, { useState, useContext, useEffect } from "react";
+import "./Create.css";
+import ServiceContext from "../../Context/services/serviceContext";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+function Create(props) {
+  const context = useContext(ServiceContext);
+  const navigate = useNavigate();
+  const { slugCount, getslugcount,addservice, Uploadfile } = context;
+
+  const [previewSourceOne, setPreviewSourceOne] = useState(""); // saves the data of file selected in the form
+  const [previewSourceTwo, setPreviewSourceTwo] = useState(""); // saves the data of file selected in the form
+  const [data, setdata] = useState({
+    sname: "",
+    sdesc: "",
+    ldesc: "",
+    slug:"",
+    smrp: 0,
+    ssp: 0,
+    sbanner: "",
+    sdoc: "",
+  });
+
+  useEffect(() => {
+    let slug = data.sname.split(" ").join("-")
+    setdata({ ...data, slug: slug })
+    getslugcount(slug.toLowerCase())
+
+    // eslint-disable-next-line
+  }, [data.sname])
+  
+
+  const handleChangeFileOne = (e) => {
+
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewSourceOne(reader.result);
+    };
+  };
+  const handleChangeFileTwo = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreviewSourceTwo(reader.result);
+    };
+  };
+
+  const handleOptionChange = () => {
+    //  balancing the changing effect of free and paid option
+    const select = document.getElementById("stype");
+    var value = select?.options[select.selectedIndex].value;
+    if (value === "free") {
+      document.querySelector("#smrp").style.display = "none";
+      document.querySelector("#ssp").style.display = "none";
+      document.querySelectorAll(".price_label")[0].style.display = "none";
+      document.querySelectorAll(".price_label")[1].style.display = "none";
+    }
+    if (value === "paid") {
+      document.querySelector("#smrp").style.display = "block";
+      document.querySelector("#ssp").style.display = "block";
+      document.querySelectorAll(".price_label")[0].style.display = "block";
+      document.querySelectorAll(".price_label")[1].style.display = "block";
+    }
+  };
+
+  // Auto resize of textare
+  const textarea = document.querySelector("#ldesc");
+  textarea?.addEventListener("input", autoResize, false);
+
+  const textarea2 = document.querySelector("#sdesc");
+  textarea2?.addEventListener("input", autoResize, false);
+
+  function autoResize() {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
+  }
+
+  // Submit of form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    props.progress(0);
+    if (
+      data.sname.length > 3 &&
+      data.sdesc.length > 5 &&
+      data.ldesc.length > 10 &&
+      previewSourceOne &&
+      previewSourceTwo 
+    ) {
+      try {
+        toast.loading("Please wait...",{
+          position: "top-center"
+        })
+        const select = document.getElementById("stype");
+        var value = select.options[select.selectedIndex].value;
+        var banner = await Uploadfile(previewSourceOne);
+        var doc = await Uploadfile(previewSourceTwo);
+        props.progress(75);
+        await addservice(
+          data.sname,
+          data.sdesc,
+          data.ldesc,
+          slugCount ===0?data.slug.toLowerCase():data.slug.toLowerCase().concat("--",`${slugCount}`),
+          banner.upload_file.secure_url,
+          doc.upload_file.secure_url,
+          0,
+          value === "free" ? false : true,
+          value === "free" ? 0 : data.smrp,
+          value === "free" ? 0 : data.ssp
+        );
+        setdata({
+          sname: "",
+          sdesc: "",
+          ldesc: "",
+          smrp: 0,
+          slug:"",
+          ssp: 0,
+          sbanner: "",
+          sdoc: "",
+        });
+        navigate("/creator_profile");
+      } catch (error) {
+        toast.error(`Service Not Added: ${error.message}`, {
+          position: "top-center",
+          autoClose: 4000,
+        });
+      }
+    } else {
+      toast.info("Mandatory fields cannot be empty", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+    }
+    
+    props.progress(100)
+    
+  };
+
+
+  // Change in values of input tags
+  const handleChange = (e) => {
+    setdata({ ...data, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <>
+      <div className="create_box">
+      
+        <h1>Create Service</h1>
+        <form className="entries" onSubmit={handleSubmit}>
+          <div>
+            <div className="left_entry_box">
+              <label htmlFor="sname" className="entry_labels">
+                Service Name <small>*</small>
+              </label>
+              <input
+                type="text"
+                name="sname"
+                id="sname"
+                onChange={handleChange}
+                value={data.sname}
+                placeholder="25JS Interview Important Question..."
+              />
+              <label htmlFor="sdesc" className="entry_labels">
+                Service Description <small>*</small>
+              </label>
+              <textarea
+                name="sdesc"
+                onChange={handleChange}
+                value={data.sdesc}
+                id="sdesc"
+                placeholder="Please catchy line to download..."
+              />
+              <label htmlFor="ldesc" className="entry_labels">
+                Long Description <small>*</small>
+              </label>
+              <textarea
+                name="ldesc"
+                onChange={handleChange}
+                value={data.ldesc}
+                id="ldesc"
+                placeholder="Please describe your service briefly..."
+              />
+              <label htmlFor="sbanner" className="entry_labels">
+                Banner Image <small>*</small>
+              </label>
+              <input
+                type="text"
+                name="sbanner"
+                id="sbanner"
+                placeholder="Upload file..."
+                onFocus={(e) => {
+                  e.target.type = "file";
+                }}
+                onChange={handleChangeFileOne}
+              />
+            </div>
+            <div className="right_entry_box">
+              <label htmlFor="stype" className="entry_labels">
+                Service Type <small>*</small>
+              </label>
+              <select id="stype" onChange={handleOptionChange}>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+              </select>
+
+              <label htmlFor="smrp" className="entry_labels price_label">
+                Set MRP <small>*</small>
+              </label>
+              <input
+                type="number"
+                name="smrp"
+                id="smrp"
+                placeholder="Eg. 299"
+                onChange={handleChange}
+                value={data.smrp}
+              />
+              <label htmlFor="ssp" className="entry_labels price_label">
+                Selling Price <small>*</small>
+              </label>
+              <input
+                type="number"
+                name="ssp"
+                id="ssp"
+                placeholder="Eg. 199"
+                onChange={handleChange}
+                value={data.ssp}
+                max={data.smrp}
+              />
+
+              <label htmlFor="sdoc" className="entry_labels">
+                Document ( supported .pdf) <small>*</small>
+              </label>
+              <input
+                type="text"
+                name="sdoc"
+                id="sdoc"
+                placeholder="Upload file..."
+                onFocus={(e) => {
+                  e.target.type = "file";
+                }}
+                onChange={handleChangeFileTwo}
+              />
+            </div>
+          </div>
+
+          <button className="submit_button" type="submit">
+            Submit and Publish
+          </button>
+        </form>
+        <ToastContainer />
+      </div>
+    </>
+  );
+}
+
+export default Create;
