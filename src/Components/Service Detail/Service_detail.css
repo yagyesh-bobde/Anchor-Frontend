@@ -1,0 +1,39 @@
+.serv_details{
+    width: 94%;
+    display: grid;
+    grid-template-columns: 5% 25% 10% 10% 15% 10% 10% 10% 5%;
+    height: 63px;
+    align-items: center;
+    font-size: 17px;
+    border-radius: 5px;
+    color: rgba(46, 43, 43, 0.808);
+    margin-bottom: 20px;
+}
+
+.serv_details span{
+    text-align: center;
+    
+}
+
+.serv_details span:nth-child(2){
+    word-wrap: break-word;
+}
+
+.serv_banner{
+    width: 65px;
+    height: 50px;
+}
+
+
+.serv_details a{
+    text-align: center;
+}
+
+.delete_serv{
+    cursor: pointer;
+    transition: transform 0.5 ease;
+}
+
+.delete_serv:hover{
+    transform: scale(1.3);
+}

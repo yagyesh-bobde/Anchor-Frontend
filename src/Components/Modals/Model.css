@@ -1,0 +1,120 @@
+.model{
+    width: 98%;
+    height: 93vh;
+    background-color: #f8f8f882;
+    position: absolute;
+    left: -1vw;
+    top: -30vh;
+}
+.model_logout{
+    width: 72%;
+    height: 93vh;
+    background-color: #f8f8f882;
+    position: absolute;
+    left: 19vw;
+    top: 2vh;
+}
+
+.logout_model_logout{
+    width: 72%;
+    height: 93vh;
+    background-color: #f8f8f82c;
+    position: absolute;
+    left: 19vw;
+    top: 2vh;
+}
+
+.model_main_box{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: white;
+    width: 530px;
+    height: 300px;
+    margin-top: 20vh;
+    margin-left: 17vw;
+    border: 2px solid rgb(110, 108, 108);
+    border-radius: 9px;
+}
+
+.model_question{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: grey;
+}
+
+.model_gyan{
+    font-size: 1.1rem;
+    width: 350px;
+    margin-top: -30px;
+    color: rgb(138, 135, 135);
+    text-align: center;
+}
+
+.model_buttons{
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+
+}
+
+.model_button{
+    width: 157px;
+    height: 47px;
+    font-size: 1.2rem;
+    background-color: white;
+    border-radius: 5px;
+    border: 2px solid #808080ba;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+.model_button:nth-child(2){
+    border: 2px solid red;
+    color: red;
+}
+
+.model_button:hover{
+    transform: scale(1.05);
+}
+
+
+.loading_bar{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: grid;
+    background-color: rgba(248, 245, 245, 0.984);
+    z-index: 999;
+}
+
+.loader_home{
+    width: 5rem;
+    display: inline-block;
+    margin: auto;
+    -webkit-animation: rotating 1.5s linear infinite;
+}
+
+@keyframes rotating{
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+
+      }
+}
+
+

@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@500&family=Ubuntu+Mono&display=swap');
+
+.dashboard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 40px;
+    
+}
+
+.dashboard a{
+    text-decoration: none;
+    color: black;
+}
+
+.user_section{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 230px;
+    margin-top: 28px;
+}
+
+.user_section h1{
+    font-size: 25px;
+}
+
+.user_section span{
+    color: rgb(128 120 120);
+    font-size: 20px;
+    font-family:'Times New Roman', Times, serif;
+
+}
+
+.add_event{
+    border: 2px solid rgba(255, 0, 0, 0.873);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 400px;
+    height: 70px;
+    color: red;
+    margin-top: -30px;
+    
+    
+}
+
+
+.add_event h2{
+    font-weight: 400;
+    font-size: 21px;
+    margin-left: -50px;
+}
