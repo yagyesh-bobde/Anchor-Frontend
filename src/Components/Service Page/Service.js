@@ -7,6 +7,7 @@ import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import User_login from "../Login/Users/User_login";
 import { ToastContainer, toast } from "react-toastify";
 import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+import { saveAs } from "file-saver";
 
 function Service(props) {
   const { slug } = useParams();
@@ -68,7 +69,28 @@ function Service(props) {
   }, 100);
 
 
+  const downloadFile = () => {
+    let oReq = new XMLHttpRequest()
+    let URLToPDF = serviceInfo.surl
+    oReq.open("GET", URLToPDF, true)
+    // oReq.setRequestHeader('Access-Control-Allow-Origin', domain)
+    oReq.setRequestHeader('Access-Control-Allow-Methods', "GET")
+
+    oReq.responseType = 'blob';
+
+    oReq.onload = function () {
+      let file = new Blob([oReq.response], {
+        type: "application/pdf"
+      })
+
+      saveAs(file, `${serviceInfo.sname}.pdf`)
+    }
+    oReq.send()
+  }
+
+
   const download_service = async () => {
+    const ext = serviceInfo.surl?.split(".").at(-1)
     if (
       localStorage.getItem("isUser") === "true" &&
       localStorage.getItem("jwtToken")
@@ -84,10 +106,14 @@ function Service(props) {
           position: "top-center",
           autoClose: 2000,
         });
-        var link = document.createElement("a");
-        link.href = serviceInfo.surl;
-        link.target = "_blank";
-        link.dispatchEvent(new MouseEvent("click"));
+        if (ext === 'pdf') {
+          downloadFile()
+        } else {
+          let link = document.createElement("a");
+          link.href = serviceInfo.surl;
+          link.target = "_blank";
+          link.dispatchEvent(new MouseEvent("click"));
+        }
       } else {
         toast.error("Order not Placed Due to some error", {
           position: "top-center",
@@ -98,10 +124,14 @@ function Service(props) {
       localStorage.getItem("isUser") === "" &&
       localStorage.getItem("jwtToken")
     ) {
-      var link = document.createElement("a");
-      link.href = serviceInfo.surl;
-      link.target = "_blank";
-      link.dispatchEvent(new MouseEvent("click"));
+      if (ext === 'pdf') {
+        downloadFile()
+      } else {
+        let link = document.createElement("a");
+        link.href = serviceInfo.surl;
+        link.target = "_blank";
+        link.dispatchEvent(new MouseEvent("click"));
+      }
     } else {
       return setOpenModel(true);
     }
