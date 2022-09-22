@@ -2,14 +2,11 @@ import React,{useContext,useEffect,useState} from "react";
 import "./Waitlist.css";
 
 import { linkedinContext } from "../../Context/LinkedinState";
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+
 
 function Waitlist() {
   const {loginInfo} = useContext(linkedinContext)
   
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
-  });
 
 
   return (

@@ -12,11 +12,8 @@ const FeedbackState = ( props ) => {
                 "jwt-token": localStorage.getItem('jwtToken') // USER LOGIN
             }
         })
-        if (response){
-            alert('Already Submitted the feedback')
-        } else{
-            // navigate to the feedback page
-        }
+        const json = await response.json()
+        return json.success;
     }
 
 
@@ -36,8 +33,7 @@ const FeedbackState = ( props ) => {
         if(json.success){
             // FEEDBACK SUBMITTED MODAL
             alert("Feedback Successfully submitted")
-            // NAVIGATE BACK TO HOME PAGE or Service page
-            console.log(json.res)
+            
         } else{
             alert("Error: Feedback could not be submitted")
         }

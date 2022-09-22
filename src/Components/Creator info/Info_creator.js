@@ -3,7 +3,7 @@ import { creatorContext } from "../../Context/CreatorState";
 import "./Info_creator.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+
 
 
 function Info_creator(props) {
@@ -20,9 +20,7 @@ function Info_creator(props) {
     twitterLink: "",
   });
 
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
-  });
+
 
   useEffect(() => {
     getAllCreatorInfo()

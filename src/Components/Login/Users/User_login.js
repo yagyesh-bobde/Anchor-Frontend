@@ -2,15 +2,12 @@ import React ,{useEffect} from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import "./User_login.css"
 import { host } from '../../../config/config';
-import googleAnalyticsAction from "../../../utils/google_analyticsiinit.js";
+
 
 
 
 function User_login({open,onClose}) {
   const location = useLocation()
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
-  });
 
 
   if (!open) {
@@ -43,7 +40,7 @@ function User_login({open,onClose}) {
           <button className="model_button" onClick={_handlelinkedin} >
             <i class="fa-brands fa-linkedin-in fa-lg"></i> Login with LinkedIn
           </button>
-        <button   className="model_button" onClick={handleGoogle} >
+        <button  className="model_button" onClick={handleGoogle} >
         <i class="fa-brands fa-google fa-lg"></i> Login with Google
           </button>
         </div>

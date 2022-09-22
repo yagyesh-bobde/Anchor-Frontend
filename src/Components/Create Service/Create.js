@@ -4,7 +4,8 @@ import ServiceContext from "../../Context/services/serviceContext";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+import Editor from "../Editor/Editor";
+
 
 function Create(props) {
   const context = useContext(ServiceContext);
@@ -22,10 +23,6 @@ function Create(props) {
     ssp: 0,
     sbanner: "",
     sdoc: "",
-  });
-
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
   });
 
   useEffect(() => {
@@ -93,7 +90,7 @@ function Create(props) {
     ) {
       try {
         toast.loading("Please wait...", {
-          position: "top-center"
+          position: "top-center",
         });
         const select = document.getElementById("stype");
         var value = select.options[select.selectedIndex].value;
@@ -107,7 +104,7 @@ function Create(props) {
             data.ldesc,
             slugCount === 0
               ? data.slug.toLowerCase()
-              : data.slug.toLowerCase().concat("--", `${slugCount}`),
+              : data.slug.toLowerCase().concat("--", `${slugCount + 1}`),
             banner.url,
             doc.url,
             0,
@@ -188,16 +185,6 @@ function Create(props) {
                 id="sdesc"
                 placeholder="Please catchy line to download..."
               />
-              <label htmlFor="ldesc" className="entry_labels">
-                Long Description <small>*</small>
-              </label>
-              <textarea
-                name="ldesc"
-                onChange={handleChange}
-                value={data.ldesc}
-                id="ldesc"
-                placeholder="Please describe your service briefly..."
-              />
               <label htmlFor="sbanner" className="entry_labels">
                 Banner Image <small>*</small>
               </label>
@@ -212,6 +199,7 @@ function Create(props) {
                 onChange={handleChangeFileOne}
               />
             </div>
+
             <div className="right_entry_box">
               <label htmlFor="stype" className="entry_labels">
                 Service Type <small>*</small>
@@ -260,6 +248,17 @@ function Create(props) {
               />
             </div>
           </div>
+          <label htmlFor="ldesc" className="entry_labels">
+            Long Description <small>*</small>
+          
+          </label>
+          {/* <textarea
+                name="ldesc"
+                onChange={handleChange}
+                value={data.ldesc}
+                id="ldesc"
+                placeholder="Please describe your service briefly..."
+              /> */}
 
           <button className="submit_button" type="submit">
             Submit and Publish

@@ -1,14 +1,12 @@
 import React,{useRef,useEffect} from "react";
 import "./Creators_login.css";
 import {host} from "../../../config/config.js"
-import googleAnalyticsAction from "../../../utils/google_analyticsiinit.js";
+
 
 function Creators_login() {
   const ref = useRef()
   
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
-  });
+
 
 
   //const handleShowPassword = () =>{

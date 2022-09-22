@@ -118,3 +118,34 @@
 }
 
 
+@media (max-width: 450px) {
+
+    .logout_model_logout{
+        left: 0;
+        padding: 15px;
+    }
+
+    .model_main_box{
+        width: 90vw;
+        height: 40vh;
+        position: absolute;
+        margin-left: 0;
+        text-align: center;
+
+    }
+
+    .model_question{
+        font-size: 1.3rem;
+    }
+
+    .model_gyan{
+        font-size: 1.1rem;
+        width: 80%;
+    }
+
+    .model_buttons button{
+        width: 25vw;
+    }
+}
+
+

@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import Service_detail from "../Service Detail/Service_detail";
 import "./Service.css";
 import ServiceContext from "../../Context/services/serviceContext";
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+
 
 function Service(props) {
   const context = useContext(ServiceContext);
@@ -10,9 +10,7 @@ function Service(props) {
 
   let count = 0;
 
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
-  });
+
 
   useEffect(() => {
     getallservices();

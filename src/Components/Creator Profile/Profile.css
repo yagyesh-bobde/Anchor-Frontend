@@ -53,19 +53,29 @@
 
 }
 
-.user_login span span{
+.login_button_user{
   cursor: pointer;
   margin-top: 10px;
-}
+  background-color: #f1eee8;
+  color: #b3b5b7 !important;
+  border-radius: 20px;
+  font-weight: 700 !important;
+  width: 70px;
+  padding: 2px 2px;
+  display: inline-block !important;
+  margin: auto !important;
+  cursor: pointer;
 
-.login_button_user:hover{
-  color: red;
-}
+} 
 
 
 .user_login span i{
   margin-left: 15px;
   cursor: pointer;
+}
+
+.hamburger-react{
+  display: none;
 }
 
 .user_login span i:hover{
@@ -98,6 +108,22 @@
   margin: auto;
   margin-top: 6vh;
   border-bottom: 2px solid grey;
+}
+
+.hamburger-menu{
+  display: none;
+  width: 100vw;
+  position: absolute;
+  z-index: 999;
+  top: 70px;
+  background-color: #e7e6e675;
+  left: 0;
+}
+
+.hamburger-item{
+  list-style: none;
+  padding: 12px 0;
+  font-size: 1.2rem;
 }
 
 .main_details_profile {
@@ -209,6 +235,7 @@
   color: rgb(100, 93, 93);
   font-size: 1.3em;
   margin-bottom: 28px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .display_services_list {
@@ -231,6 +258,7 @@
     flex-direction: column;
     align-items: flex-start;
     overflow: hidden;
+    box-shadow: 0px 2px 20px 1px #88888886;
 }
 
 .item_displayed img{
@@ -268,8 +296,8 @@
     color: rgb(72, 70, 70);
     border-radius: 5px;
     position: relative;
-    left: 77%;
-    bottom: 5%;
+    left: 10%;
+    top: 7%;
 }
 
 .paid_tag_dispalyed{
@@ -280,8 +308,8 @@
     color: rgb(72, 70, 70);
     border-radius: 5px;
     position: relative;
-    left:77%;
-    bottom: 5%;
+    left: 10%;
+    top: 7%;
     
 }
 
@@ -325,6 +353,12 @@
       width: 50vw;
     }
 
+    
+
+    .dropdown_arrow{
+      display: none;
+    } 
+
     .creator_profile_details {
       width: 73vw;
     }
@@ -333,7 +367,26 @@
 @media (max-width: 550px) {
     
     .item_displayed{
-      width: 65vw;
+      width: 70vw;
+    }
+
+    .logo{
+      margin-bottom: 2vh;
+    }
+
+    .logo img{
+      width: 1.4rem;
+      height: 1.4rem;
+      margin-right: 7px;
+    }
+    
+    .logo span{
+      font-size: 1.3rem;
+    }
+
+
+    .creator_profile_details{
+      width: 90vw !important;
     }
 
     .main_details_profile{
@@ -346,18 +399,65 @@
       margin-top: 14px;
       
     }
-
-    .creator_profile_details {
-      width: 65vw;
+    .about_creator_profile p{
+      font-size: 1.1rem;
     }
+
+    .hamburger-react{
+      display: inline;
+    }
+
+    .user_login span i{
+      display: none;
+    }
+
+    .user_login_name{
+      width: max-content;
+      margin-top: -4px !important;
+      margin-right: -18px;
+
+    }
+
+  
+    .profile_data section{
+      justify-content: center;
+    }
+
+    .profile_data section a{
+      margin-left: 10px;
+    }
+
+    .profile_data span:last-child{
+      text-align: center;
+    }
+
 
     .profile_pic_creator{
       width: 7rem;
       height: 7rem;
     }
 
+    .about_creator_profile{
+      width: 100%;
+    }
+
+    .login_button_user{
+      margin-top: -5px !important;
+    }
+
+    .subscribe_now{
+      width: 16rem;
+      border-radius: 8px;
+    }
+
+    .about_creator_profile h2{
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
     .about_creator_profile p{
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      left: 0;
     }
 
     .creator_name{
@@ -370,23 +470,6 @@
       width: 85vw;
     }
 
-    .creator_profile_details {
-      width: 90vw;
-    }
-
-    .logo{
-      margin-bottom: 2vh;
-    }
-
-    .logo img{
-      font-size: 1.1rem;
-      margin-right: 7px;
-    }
-    
-    .logo span{
-      font-size: 1.3rem;
-
-    }
 
     .user_login{
       margin-bottom: 2vh;

@@ -6,9 +6,8 @@ import { userContext } from "../../Context/UserState";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import User_login from "../Login/Users/User_login";
-
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js"
-
+import { Cross as Hamburger } from "hamburger-react";
+import mixpanel from "mixpanel-browser"
 
 function Profile(props) {
   const location = useLocation();
@@ -16,45 +15,42 @@ function Profile(props) {
   const { slug } = useParams();
   const [openModel, setOpenModel] = useState(false);
   const { services, getallservicesusingid } = context;
-  const { getcreatoridUsingSlug, basicCreatorInfo,basicCdata } =
+  const { getcreatoridUsingSlug, basicCreatorInfo, basicCdata } =
     useContext(creatorContext);
 
   const { addSubscriber, checkSubscriber } = useContext(userContext);
 
-  useEffect(()=>{
-    googleAnalyticsAction().then(()=>{
-
-    })
-  })
-
   let count = 0;
-  
+
   useEffect(() => {
     const process = async () => {
-      getcreatoridUsingSlug(slug).then((data)=>{
-        getallservicesusingid(data).then(()=>{})
-      })
-      if(localStorage.getItem("isUser")==="true" && localStorage.getItem("jwtToken")){
+      getcreatoridUsingSlug(slug).then((data) => {
+        getallservicesusingid(data).then(() => {});
+      });
+      if (
+        localStorage.getItem("isUser") === "true" &&
+        localStorage.getItem("jwtToken")
+      ) {
         await checkSubscriber(basicCreatorInfo.creatorID);
       }
     };
     toast.promise(
       process,
       {
-        pending: 'Please Wait for few seconds..',
-        error: 'Try Again by reloading the page!'
-      },{
-        position:"top-center",
-        autoClose:2000
+        pending: "Please Wait for few seconds..",
+        error: "Try Again by reloading the page!",
+      },
+      {
+        position: "top-center",
+        autoClose: 2000,
       }
-  )
-    
+    );
+
     process();
-    
+
     // eslint-disable-next-line
   }, []);
 
-  
   const dox1 = document.getElementById("unsubscribe");
   const dox2 = document.getElementById("subscribe");
 
@@ -63,28 +59,23 @@ function Profile(props) {
       localStorage.getItem("isUser") === "true" &&
       localStorage.getItem("jwtToken")
     ) {
-      checkSubscriber(basicCreatorInfo.creatorID).then((data)=>{
-        if(data){
-          if(dox1 && dox2){
+      checkSubscriber(basicCreatorInfo.creatorID).then((data) => {
+        if (data) {
+          if (dox1 && dox2) {
             dox1.style.display = "none";
             dox2.style.display = "inline-block";
-
           }
         }
-      })  
+      });
     }
-    
   }, 100);
 
+  if (!localStorage.getItem("isUser") === "") {
+    localStorage.removeItem("url");
+  } else {
+    localStorage.setItem("url", location.pathname);
+  }
 
-if(!localStorage.getItem("isUser")==="" ){
-  localStorage.removeItem("url")
-}
-else{
-  localStorage.setItem("url",location.pathname)
-}
-  
-  
   const handledropdown = () => {
     document.querySelector(".user_logout").style.display !== "none"
       ? (document.querySelector(".user_logout").style.display = "none")
@@ -92,8 +83,15 @@ else{
   };
 
   const userlogout = () => {
-    window.location.pathname = "/logout"
+    window.location.pathname = "/logout";
   };
+
+  const handleServiceClick = (slug) =>{
+    mixpanel.track("Service Card Clicked",{
+      creator:basicCdata?.slug,
+      service:slug
+    })
+  }
 
   const subscribeMe = async () => {
     if (!localStorage.getItem("jwtToken")) {
@@ -102,20 +100,23 @@ else{
     props.progress(8);
     const subscribe = addSubscriber(basicCreatorInfo.creatorID, 0);
     if (subscribe) {
-      document.querySelector("#unsubscribe").style.display="none"
-      document.querySelector("#subscribe").style.display="inline-block"
-    }
-    else{
-      toast.info("You are Already Subscribed",{
-        position:"top-center",
-        autoClose:2000
+      document.querySelector("#unsubscribe").style.display = "none";
+      document.querySelector("#subscribe").style.display = "inline-block";
+      mixpanel.track("Subscribed Creator on Creator Page",{
+        creator:basicCdata?.slug
       })
+    } else {
+      toast.info("You are Already Subscribed", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
     props.progress(75);
     props.progress(100);
   };
 
-  if (basicCdata.status ===0) return alert("The Creator doesn't exist");
+
+  if (basicCdata.status === 0) return alert("The Creator doesn't exist");
 
   return (
     <>
@@ -127,10 +128,10 @@ else{
             setOpenModel(false);
           }}
         />
-        <div className="profile_header">
+        <div className="profile_header" style={{ border: "none" }}>
           <div className="logo">
-          <img src={require("../logo.png")} alt="Logo" />
-          <span>Anchors</span>
+            <img src={require("../logo.png")} alt="Logo" />
+            <span>Anchors</span>
           </div>
           {localStorage.getItem("isUser") === "" ? (
             ""
@@ -139,7 +140,7 @@ else{
               <span>
                 {!localStorage.getItem("jwtToken") ? (
                   <span
-                  className="login_button_user"
+                    className="login_button_user"
                     onClick={() => {
                       setOpenModel(true);
                     }}
@@ -147,15 +148,30 @@ else{
                     Login
                   </span>
                 ) : (
-                  <span>
-                    Hello, {localStorage.getItem("user")}
+                  <span className="user_login_name">
+                    {localStorage.getItem("user").slice(0,12)=== localStorage.getItem("user") ? localStorage.getItem("user") : localStorage.getItem("user").slice(0,12) + ".." }
                     <i
                       className="fa-solid fa-caret-down"
                       onClick={handledropdown}
                     ></i>
+                    <Hamburger
+                    className="hamburger-react"
+                    size={20}
+                      onToggle={(toggled) => {
+                        if (toggled) {
+                          document.querySelector(".hamburger-menu").style.display="block"
+                        } else {
+                          document.querySelector(".hamburger-menu").style.display="none"
+                          // close a menu
+                        }
+                      }}
+                    />
                     <button className="user_logout" onClick={userlogout}>
                       Logout
                     </button>
+                    <ul className="hamburger-menu">
+                      <li className="hamburger-item" onClick={userlogout}>Logout</li>
+                    </ul>
                   </span>
                 )}
               </span>
@@ -171,7 +187,9 @@ else{
               className="profile_pic_creator"
             />
             <div className="profile_data">
-              <span className="creator_name">{basicCdata?basicCdata.name:basicCreatorInfo.name}</span>
+              <span className="creator_name">
+                {basicCdata ? basicCdata.name : basicCreatorInfo.name}
+              </span>
               <span className="creator_tagline">
                 {basicCreatorInfo?.tagLine}
               </span>
@@ -242,13 +260,14 @@ else{
                 ""
               ) : (
                 <>
-                  <button onClick={subscribeMe} className="subscribe_now " id="unsubscribe">
+                  <button
+                    onClick={subscribeMe}
+                    className="subscribe_now "
+                    id="unsubscribe"
+                  >
                     <i className="fa-solid fa-user-plus"></i> Subscribe Free
                   </button>
-                  <button
-                    className="subscribe_now"
-                    id="subscribe"
-                  >
+                  <button className="subscribe_now" id="subscribe">
                     <i className="fa-solid fa-check"></i> Subscribed
                   </button>
                   <span>
@@ -275,10 +294,9 @@ else{
                 key={e._id}
                 style={{ textDecoration: "none" }}
               >
-                <div className="item_displayed">
+                <div className="item_displayed" onClick={() =>handleServiceClick(e.slug)}>
                   <img src={e.simg} alt="..." />
                   <h2>{e.sname}</h2>
-                  <p>{e.stype === 0 ? "Downloadable Content" : "nikal ja"}</p>
                   <span
                     className={`${
                       e.isPaid === true ? "paid" : "free"

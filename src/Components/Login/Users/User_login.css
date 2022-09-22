@@ -1,18 +1,17 @@
 .user_model{
-
     position: absolute;
     top: 0;
     left: 0;
     z-index: 99;
     width: 100vw;
     height: 200vh;
+    display: grid;
 }
 
 .user_model_box{
     margin: 15vh auto;
     height: 70vh;
     width: 31vw;
-    height: 70vh;
 }
 
 .user_model_box img{
@@ -78,6 +77,8 @@
     .user_model_box{
         width: 80vw;
         height: 70vh;
+        margin-left: 10vw;
+        
     }
 
     .user_model_box img{

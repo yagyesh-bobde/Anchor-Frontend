@@ -91,7 +91,7 @@ const ServiceState = (props) => {
     const json = await response.json();
     if(json.success){
       setServiceInfo(json.service[0]);
-      return json.service[0].c_id
+      return [json.service[0]?.c_id,json.service[0]?._id]
     }else{
       console.log("Some error Occured")
     }

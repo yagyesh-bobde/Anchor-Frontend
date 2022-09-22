@@ -10,7 +10,7 @@ import { linkedinContext } from "../../Context/LinkedinState";
 import { ToastContainer,toast } from "react-toastify";
 import "./Home.css";
 import Loading from "../Modals/Loading";
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+
 
 
 function Home(props) {
@@ -19,9 +19,6 @@ function Home(props) {
   const { loginlinkedinUser, usergooglelogin, loginCreator } =
     useContext(linkedinContext);
 
-    useEffect(() => {
-      googleAnalyticsAction().then(() => {});
-    });
 
 
   useEffect(() => {
