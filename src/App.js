@@ -15,6 +15,15 @@ import FeedbackState from "./Context/FeedbackState"
 import Privacy from "./Components/Privacy Policy/Privacy";
 import Waitlist from "./Components/Waitlist/Waitlist";
 import Logout_Model from "./Components/Modals/Logout_Model";
+import UserCount from "./Developers/UserCount";
+import mixpanel from "mixpanel-browser"
+import {mixPanelToken} from "./config/config.js"
+import Test from "./Components/Editor/Test";
+import ReactEditor from "./Components/Editor/Editor";
+
+
+
+mixpanel.init( mixPanelToken , { debug : true })
 
 function App() {
   const [progress, setprogress] = useState(0)
@@ -43,7 +52,9 @@ function App() {
           <Route path="/s/:slug" element={<Service progress={changeprogress}/>}></Route>  
           <Route path="/privacy-policy" element={<Privacy/>}></Route>  
           <Route path="/waitlist" element={<Waitlist/>}></Route>  
-          <Route path="/feedback/:id" element={<Feedback progress={changeprogress}/>}></Route>  
+          <Route path="/developer/count" element={<UserCount/>}></Route>  
+          <Route path="/developer/test" element={<ReactEditor/>}></Route>  
+          <Route path="/feedback/:slug" element={<Feedback progress={changeprogress}/>}></Route>  
           {localStorage.getItem("jwtToken") && 
           <Route
               path="/logout"

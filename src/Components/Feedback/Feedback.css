@@ -1,52 +1,69 @@
-.rating{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin: 50px auto;
-    height: 67vh;
-    width: max-content;
-
+.rating {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 50px auto;
 }
 
-
-.rating h1{
-    font-size: 40px;
+.rating h1 {
+  font-size: 35px;
 }
 
-.stars{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 25vw;
+.stars {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 25vw;
+  margin: 7vh 0;
 }
 
-.stars i{
-    color: black;
-    
-    
+.stars i {
+  color: black;
 }
 
-.rating textarea{
-    resize: none;
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 5px;
+.rating textarea {
+  resize: none;
+  padding: 20px;
+  width: 48vw;
+  min-height: 25vh;
+  border: 3px solid blue;
+  font-size: 1.1rem;
+  border-radius: 5px;
 }
 
-.submit{
-    width: 15rem;
-    height: 3rem;
-    background-color: white;
-    border-radius: 7px;
-    border: 2px solid red;
-    color: red;
-    font-size: 1.3rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.5s ease;
+.submit {
+  width: 15rem;
+  height: 3rem;
+  background-color: red;
+  border-radius: 7px;
+  border: 2px solid red;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 35px;
+  transition: transform 0.5s ease;
 }
 
-.submit:hover{
-    transform: scale(1.05);
+.submit:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 500px) {
+
+    .rating h1{
+        font-size: 1.4rem;
+        text-align: center;
+
+    }
+
+    .rating textarea{
+      width: 82vw;
+      font-size: 1rem;
+    }
+
+    .stars{
+        width: 80vw;
+    }
 }

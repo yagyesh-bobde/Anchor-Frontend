@@ -2,16 +2,13 @@ import React,{useContext,useEffect} from "react";
 import "./Navbar.css";
 import { Link, useLocation } from "react-router-dom";
 import { linkedinContext } from "../../Context/LinkedinState";
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+
 
 function Navbar() {
     const location = useLocation()
     const {  loginInfo } = useContext(linkedinContext)
 
-    useEffect(() => {
-      googleAnalyticsAction().then(() => {});
-    });
-  
+
   return (
     <div className="side_navbar">
       <Link className="creators_profile" target="_blank" rel="noreferrer" to={`c/${localStorage.c_id}`}>
@@ -38,9 +35,9 @@ function Navbar() {
         <Link to="/servicelist" className={`${location.pathname==='/servicelist'?'active':""} items`}><li >
           Services Detail
         </li></Link>
-        <Link to="/logout" className={`${location.pathname==='/logout'?'active':""} items`}><li >
+        <a className={`${location.pathname==='/logout'?'active':""} items`}><li onClick={()=>{window.open("/logout","_self")}}>
           Logout
-        </li></Link>
+        </li></a>
       </ul>
     </div>
   );

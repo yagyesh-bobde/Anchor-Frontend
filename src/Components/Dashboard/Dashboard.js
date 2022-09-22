@@ -2,22 +2,28 @@ import "./Dashboard.css";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useContext, useState } from "react";
 import { linkedinContext } from "../../Context/LinkedinState";
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+
 
 function Dashboard() {
   const { loginInfo, getStatus } = useContext(linkedinContext);
   const navigate = useNavigate();
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
+
+useEffect(() => {
+  getStatus(localStorage.getItem("jwtToken")).then((data) => {
+    if (data == 0) {
+      navigate("/waitlist");
+    }
   });
 
-  setInterval(() => {
-    getStatus(localStorage.getItem("jwtToken")).then((data) => {
-      if (data == 0) {
-        navigate("/waitlist");
-      }
-    });
-  }, 30000);
+}, [])
+
+  //setInterval(() => {
+  //  getStatus(localStorage.getItem("jwtToken")).then((data) => {
+  //    if (data == 0) {
+  //      navigate("/waitlist");
+  //    }
+  //  });
+  //}, 300000);
 
   return (
     <>

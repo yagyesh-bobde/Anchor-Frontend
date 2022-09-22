@@ -1,12 +1,10 @@
 import React,{useEffect} from "react";
 import "./Privacy.css";
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+
 
 function Privacy() {
 
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
-  });
+
 
   return (
     <>

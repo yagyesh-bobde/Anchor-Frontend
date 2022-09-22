@@ -6,7 +6,6 @@ export const userContext = createContext();
 const UserState = (props) => {
   
 
-
     // ROUTE 1 : USER SIGN up
     //const userSignup = async( name, email, password, location) =>{
     //    const response = await fetch(`${host}/api/user/createuser`, {
@@ -57,6 +56,9 @@ const UserState = (props) => {
     //        alert(json.error)
     //    }
     //}
+
+    
+
 
     // ROUTE 3 : USER ORDER
     const userPlaceOrder = async ( amount , status , serviceid,creatorId ) => {

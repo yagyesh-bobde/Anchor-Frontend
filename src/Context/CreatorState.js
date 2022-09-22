@@ -140,9 +140,12 @@ const CreatorState = (props) => {
         const json = await response.json()
         if(json.success){
             setallSubscribers(json.res)
+            return json.res
         } else {
             //return alert(json.error)
+            return json.success;
         }
+
     }
 
     // SUBSCRIBER COUNTS => TOTAL < FREE < PAID
@@ -166,13 +169,14 @@ const CreatorState = (props) => {
     }
 
     // FETCH SUBSCRIBER INFO
-    const getSubsInfo = async () => {
+    const getSubsInfo = async (subsData=[]) => {
         let allInfo = []
-        for (let i of allSubscribers) {
+        for (let i of subsData) {
             let info = await getUserInfo(i.userID.toString())
             allInfo.push(info)
         }
         setsubsInfo(allInfo)
+        return allInfo
     }
     const getUserInfo = async (id) => {
         const response = await fetch(`${host}/api/user/info/advanced/${id}`, {

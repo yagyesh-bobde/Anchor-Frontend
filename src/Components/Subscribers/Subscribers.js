@@ -2,27 +2,28 @@ import React, { useContext, useEffect } from 'react'
 import SubscriberDetail from "../Subscriber Details/Subscriber_detail";
 import { creatorContext } from '../../Context/CreatorState'
 import './Subscribers.css'
-import googleAnalyticsAction from "../../utils/google_analyticsiinit.js";
+
 
 function Subscribers() {
   const { allSubscribers, getAllSubscribers, getSubCounts, subscriberCount, getSubsInfo, subsInfo, setsubsInfo } = useContext(creatorContext)
 
-  useEffect(() => {
-    googleAnalyticsAction().then(() => {});
-  });
-
-  useEffect(() => {
-    getAllSubscribers()
+  const process = async () =>{
+    const data = await getAllSubscribers()
     if (allSubscribers.length !== 0) {
-      getSubsInfo()
+      getSubsInfo(data)
 
       getSubCounts()
     }
+  }
+
+
+  useEffect(() => {
+    process()
   }, [])
 
   useEffect(() => {
     if (allSubscribers.length !== 0) {
-      getSubsInfo()
+      getSubsInfo(allSubscribers)
 
       getSubCounts()
     }
@@ -66,9 +67,7 @@ function Subscribers() {
                 <SubscriberDetail
                 key = {id}
                   sno={id+1}
-                  name={info?.name}
-                  email={info?.email}
-                  loc={info?.location}
+                  info={info}
                   type={allSubscribers[id]?.isPaid ? "Paid" : "Free"}
                 />
               )
