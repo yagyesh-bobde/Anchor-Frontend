@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Roboto&display=swap');
+
+.service_section_content{
+    width: 85vw;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.about_c{
+    text-align: center;
+    display: none;
+}
+
+.service_page_creator{
+    border: none;
+    width: 100%;
+    display: flex;
+    margin-top: 10vh;
+    align-items: center;
+}
+
+
+.service_section_image{
+    width: 100%;
+    height: 40vh;
+    border-radius: 10px;
+    
+}
+
+.service_section_details{
+    display: flex;
+    width: 97%;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 30px auto;
+}
+
+.left_service_section{
+    width: 60%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.left_service_section h1{
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: rgb(82, 78, 78);
+    width: 80%;
+}
+
+.service_sdesc{
+    font-size: 1.1rem;
+    margin-top: 12px;
+    color: rgb(79, 76, 76);
+    width: 90%;
+    word-wrap: break-word;
+}
+
+.left_service_section h2{
+    font-size: 1.6rem;
+    color: rgb(93, 90, 90);
+    margin-top: 40px;
+}
+
+.download_service{
+    width: 22vw;
+    font-size: 1.3rem;
+    background-color: red;
+    padding: 10px;
+    border: 2px solid red;
+    border-radius: 5px;
+    margin: auto;
+    color: white;
+    cursor: pointer;
+}
+
+.download_service i{
+    margin-right: 10px;
+}
+
+.share_on_whatsapp{
+    width: 100%;
+    display: flex;
+    background-color: #eeeeeebb;
+    height: 12vh;
+    border-radius: 5px;
+    font-weight: 500;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.share_on_whatsapp span{
+    font-size: 1.2rem;
+    color: grey;
+    margin-left: 50px;
+}
+
+.whatsapp_button{
+    width: 20vw;
+    font-size: 1.2rem;
+    color: white;
+    border: 2px solid #32d56f;
+    height: 50px;
+    border-radius: 5px;
+    background-color: #32d56f;
+    margin-right: 100px;
+    cursor: pointer;
+
+}
+
+.whatsapp_button i{
+    margin-right: 10px;
+}
+
+.footer_service{
+    display: flex;
+    justify-content: space-between;
+    align-items:center ;
+    width: 90%;
+    margin: 10px auto;
+    margin-top: 10vh;
+    font-size: 1.2rem;
+    color: grey;
+}
+
+.footer_service a{
+    color: grey;
+    text-decoration:none
+}
+
+
+@media (max-width: 500px) {
+    .service_section_content{
+        width: 100vw;
+    }
+
+    .service_page_creator{
+        width: 85%;
+        height: 60vh;
+        margin-top: 22px;
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0px 2px 20px 0.3px #88888886;
+    }
+
+    .profile_pic_creator{
+        width: 4.6rem;
+        height: 4.6rem;
+    }
+
+    .about_c{
+        display: block;
+        font-size: 1.5rem;
+        margin-top: 35px;
+        color: rgba(128, 128, 128, 0.758);
+    }
+
+    .creator_name{
+        font-size: 1.2rem;
+        margin-top: 0px;
+    }
+
+    .creator_tagline{
+        font-size: 1.1rem;
+    }
+
+    .service_section_details{
+        width: 100%;
+        
+    }
+
+    .service_section_details{
+        flex-direction: column;
+    }
+
+    .service_section_image{
+        height: 30vh;
+        margin: auto;
+        border-radius: 0px;
+    }
+
+    .left_service_section{
+        width: 95%;
+    }
+    
+    .left_service_section h1{
+        width: 95%;
+        font-size: 1.8rem;
+        color: rgb(82, 78, 78);
+        /* color: black !important; */
+        width: 90%;
+    }
+    
+    .left_service_section h2{
+        /* color: black !important; */
+        color: rgb(82, 78, 78);
+        font-size: 1.3rem;
+        margin-top: 20px;
+    }
+
+    .service_sdesc{
+        font-size: 1rem;
+        font-weight: 450;
+        width: 96%;
+        /* color: black; */
+    }
+
+    .download_service{
+        width: 97%;
+        position: fixed;
+        bottom: 4px;
+        height: 53px;
+        font-size: 1.2rem;
+        padding: 8px;
+        font-weight: 500;
+        border-radius: 10px;
+    }
+
+    .share_on_whatsapp{
+        flex-direction: column;
+        height: 25vh;
+        box-shadow: 0px 0px 5px 2px #eeeeee;
+        justify-content: space-evenly;
+    }
+
+    .share_on_whatsapp span{
+        font-size: 1rem;
+        /* color: black; */
+        margin-left: 0;
+        text-align: center;
+    }
+    
+    .whatsapp_button{
+        margin-right: 0;
+        font-size: 1.1rem;
+        width: 300px;
+        padding: 0 10px;
+    }
+
+    .footer_service{
+        font-size: 1rem;
+        width: 100%;
+        /* color: black; */
+        font-weight: 500;
+        height: 70px;
+        margin-bottom: 60px;
+        margin-top: 7vh;
+        box-shadow: 0px 0px 8px 4px #eeeeee;
+        background-color: #eeeeee !important;
+    }
+
+    .footer_service a{
+        display: none;
+    }
+
+    .footer_service span{
+        display: inline-block;
+        margin: auto;
+    }
+
+}
