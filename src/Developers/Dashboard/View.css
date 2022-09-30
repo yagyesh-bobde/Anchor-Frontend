@@ -1,0 +1,90 @@
+
+.creator_display_list{
+    display: grid;
+    width: 70%;
+    margin: 25px auto;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 20px;
+}
+
+
+.creator_item{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid grey;
+    border-radius: 10px;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 8px;
+    font-size: 1.3rem;
+    min-height: 300px;
+    box-shadow: 0px 0px 15px 1px rgba(128, 128, 128, 0.612);
+    transition: transform 0.5s ease;
+    cursor: pointer;
+}
+
+
+.creator_item:hover{
+    transform: scale(1.02);
+}
+
+.profile_creator{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+
+.profile_creator img{
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-right: 15px;
+    border-radius: 150px;
+}
+
+.profile_creator span{
+    font-weight: bold;
+}
+
+.other_details_creator{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 1.2rem;
+    margin-top: 15px;
+    line-height: 30px;
+}
+
+.accessible{
+    background-color: rgb(95, 231, 95);
+    font-size: 1.1rem;
+    border-radius: 25px;
+    padding: 2px 6px;
+    margin-top: 20px;
+}
+
+.naccessible{
+    background-color: rgb(234, 118, 118);
+    font-size: 1.1rem;
+    border-radius: 25px;
+    padding: 2px 6px;
+    margin-top: 20px;
+}
+
+
+.logout_admin_panel{
+    width: 170px;
+    height: 40px;
+    margin-right: 50px;
+    background-color: red;
+    border: none;
+    color: white;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+
+
