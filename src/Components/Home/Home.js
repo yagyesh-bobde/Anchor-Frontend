@@ -34,6 +34,9 @@ function Home(props) {
       !localStorage.getItem("from")
     ) {
       loginCreator();
+
+    }else if (localStorage.getItem('isAdmin') === true){
+      navigate('/dashboard')
     } else {
       if (localStorage.getItem("url")) {
         navigate(`${localStorage.getItem("url")}`);

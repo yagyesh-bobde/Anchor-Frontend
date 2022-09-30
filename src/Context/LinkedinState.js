@@ -72,6 +72,7 @@ const LinkedinState = (props) => {
     });
     const res = await response.json();
     if (res.success) {
+      console.log(res)
       const status = await getStatus(res.jwtToken);
       if (status === 1) {
         localStorage.setItem("jwtToken", res.jwtToken);
@@ -310,6 +311,7 @@ const LinkedinState = (props) => {
         openModelFB,
         setOpenModelFB,
         loginInfo,
+        registerCreatorLogin
       }}
     >
       {props.children}

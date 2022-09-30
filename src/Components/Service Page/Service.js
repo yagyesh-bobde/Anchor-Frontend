@@ -79,7 +79,7 @@ function Service(props) {
       let users = "";
       for (let index = 0; index < subsInfod.length; index++) {
         let email = subsInfod[index]?.email ? subsInfod[index]?.email : "";
-        users = users + email + ",";
+        users = users + email ? `${email},` : ''
       }
       return users;
     }
@@ -119,11 +119,11 @@ function Service(props) {
     //})
     const userMails = await getUserMails();
     console.log(userMails); 
-    if (userMails) {
-      sendMail(userMails);
-    } else {
-      console.log("No Subscribers");
-    }
+    // if (userMails) {
+    //   sendMail(userMails);
+    // } else {
+    //   console.log("No Subscribers");
+    // }
     //setsent(true)
   };
 
@@ -265,7 +265,7 @@ function Service(props) {
             <span>Anchors</span>
           </div>
           {localStorage.getItem("isUser") === "" ? (
-            //<button className="send_Email" onClick={handleSubmitEmail}>Send Email to Subscribers</button>
+            // <button className="send_Email" onClick={handleSubmitEmail}>Send Email to Subscribers</button>
             ""
           ) : (
             <div className="user_login">

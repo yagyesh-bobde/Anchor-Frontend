@@ -18,9 +18,9 @@ import Logout_Model from "./Components/Modals/Logout_Model";
 import UserCount from "./Developers/UserCount";
 import mixpanel from "mixpanel-browser"
 import {mixPanelToken} from "./config/config.js"
-import Test from "./Components/Editor/Test";
-import ReactEditor from "./Components/Editor/Editor";
 import Main from "./Components/Main Page/Main";
+import AllCreators from "./Components/admin/info/AllCreators";
+import CreatorStats from "./Components/admin/info/CreatorStats";
 
 
 
@@ -63,6 +63,19 @@ function App() {
             />}
           <Route path="/login">
             <Route path="creators" element={<Creators_login  progress={changeprogress}/>}/>
+          </Route>
+
+
+          <Route path='/admin'>
+              <Route path='info'>
+                <Route path='allCreators' element={<AllCreators />} />
+                <Route path='creator'>
+                      <Route path=':creatorID' element={<CreatorStats/>} />
+                </Route>
+            </Route>
+            {/* <Route path='auth'>
+              // ADMIN SIGN UP & LOGIN
+            </Route> */}
           </Route>
         </Routes>
 

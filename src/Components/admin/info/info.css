@@ -1,0 +1,35 @@
+.admin_creator_info {
+    min-width: 400px;
+    max-width: 700px;
+    box-shadow: 0 0 7px 2px grey;
+    margin: 50px auto;
+    border-radius: 10px;
+    padding: 25px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+.admin_creator_info:hover {
+    transform: scale(1.1);
+}
+.admin_creator_info header {
+    display: flex;
+    align-items: center;
+
+}
+.admin_creator_info header img{ 
+    border-radius: 50%;
+    width: 75px;
+}
+.admin_creator_info header h4 {
+    font-size: 1.75rem;
+    margin-left: 25px;
+}
+
+.admin_creator_info main {
+    margin-top: 25px;
+    font-size: 1.5rem;
+}
+
+.admin_creator_info main .info_main_key {
+    font-weight: bold;
+}
