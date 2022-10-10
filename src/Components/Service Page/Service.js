@@ -12,6 +12,7 @@ import { Cross as Hamburger } from "hamburger-react";
 import mixpanel from "mixpanel-browser";
 import Feedback_Modal from "../Modals/Feedback_Modal";
 import { linkedinContext } from "../../Context/LinkedinState";
+import { paymentContext } from "../../Context/PaymentState";
 
 function Service(props) {
   const { slug } = useParams();
@@ -19,19 +20,17 @@ function Service(props) {
   const navigate = useNavigate();
   const context = useContext(ServiceContext);
   const [openModel, setOpenModel] = useState(false);
-  const { serviceInfo, getserviceinfo, getserviceusingid } = context;
-  const {openModelFB, setOpenModelFB ,FBService} = useContext(linkedinContext)
-  const {
-    basicCdata,
-    getBasicCreatorInfo,
-    basicCreatorInfo,
-    allSubscribers,
-    getAllSubscribers,
-    subsInfo,
-    getSubsInfo,
-  } = useContext(creatorContext);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const { serviceInfo, getserviceinfo } = context;
+  const { openModelFB, setOpenModelFB, FBService } =
+    useContext(linkedinContext);
+  const { basicCdata, getBasicCreatorInfo, basicCreatorInfo } =
+    useContext(creatorContext);
   const { userPlaceOrder, addSubscriber, checkSubscriber } =
     useContext(userContext);
+
+  const { createRazorpayClientSecret, razorpay_key,checkfororder } =
+    useContext(paymentContext);
 
   if (!localStorage.getItem("isUser") === "") {
     localStorage.removeItem("url");
@@ -72,64 +71,117 @@ function Service(props) {
     }
   }, 100);
 
-  const getUserMails = async () => {
-    const subsData = await getAllSubscribers();
-    const subsInfod = await getSubsInfo(subsData);
-    if (subsInfod.length !== 0) {
-      let users = "";
-      for (let index = 0; index < subsInfod.length; index++) {
-        let email = subsInfod[index]?.email ? subsInfod[index]?.email : "";
-        users = users + email ? `${email},` : ''
-      }
-      return users;
-    }
-    return null;
-  };
+  const orderPlacing = () => {
+    const ext = serviceInfo.surl?.split(".").at(-1);
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
 
-  const sendMail = async (userMails) => {
-    fetch("https://6ht3n8kja3.execute-api.ap-south-1.amazonaws.com/sendEmail", {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(
-        {
-          "creatorName" : "testing",
-          "receiverEmail" : "singhyuvraj0506@gmail.com",
-          "message" : {
-            "greet": "Hey Buddy",
-            "main": "Himanshu this side and hope all going great in life.\nI want your valuable feedback on the last service you use on Anchors which was <b>\"Most Frequent Questions on Google\"</b>.\nSo waiting for your valuable reply.",
-            "closing": "Your Friend"
+    script.onerror = () => {
+      alert("Razorpay SDK Failed to load. Are you Online?");
+    };
+
+
+    script.onclose = 
+
+    script.onload = async () => {
+      try {
+        setPaymentProcessing(true);
+        const order = await createRazorpayClientSecret(serviceInfo?.ssp);
+        const key = await razorpay_key();
+        const options = {
+          key: key,
+          amount: order.amount,
+          currency: order.currency,
+          name: "Anchors.in",
+          description: `Payment for Buying - ${serviceInfo?.sname}`,
+          order_id: order.id,
+          handler: async function (response) {
+            const {
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature,
+            } = await response;
+            const success = await userPlaceOrder(
+              order.amount / 100,
+              1,
+              serviceInfo?._id,
+              basicCreatorInfo.creatorID,
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature
+            );
+            if (success) {
+              toast.success("Order Placed Successfully", {
+                position: "top-center",
+                autoClose: 2000,
+              });
+              if (ext === "pdf") {
+                downloadFile().then(()=>{})
+              } else {
+                let link = document.createElement("a");
+                link.href = serviceInfo.surl;
+                link.target = "_blank";
+                link.dispatchEvent(new MouseEvent("click"));
+              }
+              toast.info("Check the Downloads section for the file after 5-20 seconds, if file not found raise an issue at ravi@anchors.in",{
+                position:"top-center"
+              })
+              mixpanel.track("Downloaded Paid Service", {
+                service: slug,
+                amount: serviceInfo?.ssp,
+                creator: basicCdata?.slug,
+              });
+              setPaymentProcessing(false);
+            } else {
+              toast.error(
+                "Order not Placed Due to some error, If your payment has been deducted then it would be refunded in 3-4 working days",
+                {
+                  position: "top-center",
+                  autoClose: 3000,
+                }
+              );
+              setPaymentProcessing(false);
+            }
           },
-          "subject" : "Message from Himanshu Shekhar!!!!!!"
-        }
-      ),
-    });
-    // let response = await res.json()
-    // console.log(response)
-  };
+          modal:{
+            ondismiss: function(){
+              toast.info(
+                "It is a paid service, For downloading it you have to pay the one time payment",
+                {
+                  position: "top-center",
+                  autoClose: 5000,
+                }
+              );
+              setTimeout(() => {
+                window.location.reload()
+              }, 5000);
+          }},
+          notify: {
+            sms: true,
+            email: true,
+          },
+          theme: {
+            color: "#040102",
+          },
+        };
 
-  const handleSubmitEmail = async (e) => {
-    e.preventDefault();
-    //mixpanel.track("Email Sent to Subscribers", {
-    //    serviceName: "The Service Name",
-    //    creatorName: "CreatorName"
-    //})
-    const userMails = await getUserMails();
-    console.log(userMails); 
-    // if (userMails) {
-    //   sendMail(userMails);
-    // } else {
-    //   console.log("No Subscribers");
-    // }
-    //setsent(true)
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+        
+      } catch (err) {
+        toast.error("Some error occured try again in some time", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      }
+    };
+
+    document.body.appendChild(script);
   };
 
   const downloadFile = () => {
     let oReq = new XMLHttpRequest();
-    let URLToPDF = serviceInfo.surl;
+    let URLToPDF = serviceInfo?.surl;
     oReq.open("GET", URLToPDF, true);
     oReq.setRequestHeader(
       "Access-Control-Allow-Origin",
@@ -144,11 +196,11 @@ function Service(props) {
         type: "application/pdf",
       });
 
-      saveAs(file, `${serviceInfo.sname}.pdf`);
+      saveAs(file, `${serviceInfo?.sname}.pdf`);
     };
     oReq.send();
+
   };
-  
 
   const download_service = async () => {
     const ext = serviceInfo.surl?.split(".").at(-1);
@@ -156,41 +208,72 @@ function Service(props) {
       localStorage.getItem("isUser") === "true" &&
       localStorage.getItem("jwtToken")
     ) {
-      
-      const success = await userPlaceOrder(
-        serviceInfo.ssp,
-        1,
-        serviceInfo._id,
-        basicCreatorInfo.creatorID
-      );
-      if (success) {
-        toast.success("Order Placed Successfully", {
-          position: "top-center",
-          autoClose: 2000,
-        });
-        
-        if (ext === "pdf") {
-          downloadFile();
-        } else {
-          let link = document.createElement("a");
-          link.href = serviceInfo.surl;
-          link.target = "_blank";
-          link.dispatchEvent(new MouseEvent("click"));
-        }
-        mixpanel.track("Downloaded Service", {
-          service: slug,
-          creator:basicCdata?.slug
-        });
+      if (serviceInfo?.isPaid) {
+        checkfororder(serviceInfo?._id).then((e)=>{
+          if(e){
+            if (ext === "pdf") {
+              downloadFile()
+            } else {
+              let link = document.createElement("a");
+              link.href = serviceInfo.surl;
+              link.target = "_blank";
+              link.dispatchEvent(new MouseEvent("click"));
+            }
+            toast.info("Check the Downloads section for the file after 5-20 seconds, if file not found raise an issue at ravi@anchors.in",{
+              position:"top-center"
+            })
+            mixpanel.track("Downloaded Paid Service", {
+              service: slug,
+              amount:serviceInfo?.ssp,
+              creator: basicCdata?.slug,
+            });
+          }
+          else{
+            orderPlacing().then(()=>{})
+          }
+        })
       } else {
-        toast.error("Order not Placed Due to some error", {
-          position: "top-center",
-          autoClose: 2000,
-        });
+        setPaymentProcessing(true)
+        const success = await userPlaceOrder(
+          serviceInfo.ssp,
+          1,
+          serviceInfo._id,
+          basicCreatorInfo.creatorID
+        );
+        if (success) {
+          toast.success("Order Placed Successfully", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+
+          if (ext === "pdf") {
+            downloadFile()
+          } else {
+            let link = document.createElement("a");
+            link.href = serviceInfo.surl;
+            link.target = "_blank";
+            link.dispatchEvent(new MouseEvent("click"));
+          }
+          toast.info("Check the Downloads section for the file after 5-20 seconds, if file not found raise an issue at ravi@anchors.in",{
+            position:"top-center"
+          })  
+          mixpanel.track("Downloaded Service", {
+            service: slug,
+            creator: basicCdata?.slug,
+          });
+        } else {
+          toast.error("Order not Placed Due to some error", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+        }
+        setPaymentProcessing(false)
       }
     } else if (
       localStorage.getItem("isUser") === "" &&
       localStorage.getItem("jwtToken")
     ) {
+      setPaymentProcessing(true)
       if (ext === "pdf") {
         downloadFile();
       } else {
@@ -199,6 +282,7 @@ function Service(props) {
         link.target = "_blank";
         link.dispatchEvent(new MouseEvent("click"));
       }
+      setPaymentProcessing(false)
     } else {
       return setOpenModel(true);
     }
@@ -265,7 +349,6 @@ function Service(props) {
             <span>Anchors</span>
           </div>
           {localStorage.getItem("isUser") === "" ? (
-            // <button className="send_Email" onClick={handleSubmitEmail}>Send Email to Subscribers</button>
             ""
           ) : (
             <div className="user_login">
@@ -332,14 +415,61 @@ function Service(props) {
               <p className="service_sdesc">{serviceInfo?.sdesc}</p>
 
               <h2>Resource Description</h2>
-              <div className="service_sdesc">{(document.querySelectorAll(".service_sdesc")[1])?document.querySelectorAll(".service_sdesc")[1].innerHTML = serviceInfo?.ldesc:""}</div>
+              <div className="service_sdesc">
+                {document.querySelectorAll(".service_sdesc")[1]
+                  ? (document.querySelectorAll(".service_sdesc")[1].innerHTML =
+                      serviceInfo?.ldesc)
+                  : ""}
+              </div>
             </div>
 
-            <button className="download_service" onClick={download_service}>
-              <i className="fa-solid fa-circle-down fa-lg"></i> Download Free
-              Now
+            <div className={serviceInfo?.isPaid ?"right_service_section" : "right_service_section right_section_mobile_notpaid"}>
+
+
+            {/* Paid button vs free service button */}
+            { serviceInfo?.isPaid &&
+            <>
+            <div className="price_card">
+              <h2>Price Summary</h2>
+              <div>
+
+              <div className="pricing_headers">
+                <span>Maximum Retail Price(MRP)</span>
+                <span>Discount</span>
+                <span>Net Price To Pay</span>
+              </div>
+              <div className="price_colons">
+                <span>:</span>
+                <span>:</span>
+                <span>:</span>
+              </div>
+              <div className="price_prices">
+                <span style={{textDecoration:"line-through"}}>₹{serviceInfo?.smrp}</span>
+                <span>-{(serviceInfo?.smrp-serviceInfo?.ssp)/serviceInfo?.smrp * 100}%</span>
+                <span>₹{serviceInfo?.ssp}</span>
+              </div>
+            </div>
+              </div>
+
+              {/* for mobile devices */}
+              <div className="mobile_price_desc">
+                <div>
+                <h3>Price:&nbsp;</h3>
+                <span style={{textDecoration:"line-through"}}> ₹{serviceInfo?.smrp} </span>
+                </div>
+                <div>
+                <span className="main_ssp">₹{serviceInfo?.ssp} </span>
+                <span>(-{(serviceInfo?.smrp-serviceInfo?.ssp)/serviceInfo?.smrp * 100}%)</span>
+                </div>
+              </div>
+              </>
+            }
+            <button className={serviceInfo?.isPaid ?"download_service" : "download_service download_service_mobile_notpaid"} onClick={download_service} style={paymentProcessing ? {backgroundColor:"grey" , border:"2px solid grey"}:{}}>
+              {paymentProcessing ? <>Processing</> :
+              <><i className="fa-solid fa-circle-down fa-lg"></i> {serviceInfo?.isPaid?<>Download Now</> :<>Download Free Now</>}</>}
             </button>
           </div>
+            </div>
           <div className="share_on_whatsapp">
             <span>Do you think it can be useful to your friends?</span>
 
@@ -357,7 +487,7 @@ function Service(props) {
         </div>
         <h3 className="about_c">About Creator</h3>
         <div className="creator_profile_details service_page_creator">
-          <div className="main_details_profile">
+          <div className="main_details_profile service_main_details_profile">
             <Link
               to={`/c/${basicCdata?.slug}`}
               style={{ textDecoration: "none" }}

@@ -64,7 +64,6 @@
 .or_section{
     font-size: 1.3rem;
     color: rgba(141, 135, 135, 0.868);
-    
     display: flex;
     align-items: center;
     
@@ -75,8 +74,8 @@
     height: 1px;
     background-color: rgba(141, 135, 135, 0.701);
     position: relative;
-    top: 4px;
-    margin: 0 8px;
+    top: 0px;
+    margin: -10px 8px;
 }
 
 
@@ -107,21 +106,20 @@
     height: 70vh;
     position: relative;
     top: -11vh;
-    
     border-radius: 43px;
     
 }
 
 .login_container img{
-    width: 11rem;
-    height: 11rem;
+    width: 7rem;
+    height: 7rem;
     border-radius: 150px;
-    margin-top: -70px;
+    margin-top: -10px;
 }
 
 .login_container h2{
     font-size: 1.7rem;
-    margin-top: -80px;
+    margin-top: -10px;
 }
 
 .login_container form{
@@ -137,15 +135,25 @@
     width: 87%;
     height: 50px;
     background-color: white;
-    color: blue;
-    border: 2px solid blue;
     border-radius: 10px;
     font-size: 1.4rem;
     text-align: left;
     padding-left: 40px;
     padding-right: 25px;
-    margin-top: -30px;
     cursor: pointer;
+}
+
+
+.linkedin_auth_link{
+    color: blue;
+    border: 2px solid blue;
+    margin-top: 15px;
+}
+
+.google_auth_link{
+    color: rgb(93, 93, 95);
+    border: 2px solid rgb(93, 93, 93);
+    margin-top: 0px;
 }
 
 .login_container button i{

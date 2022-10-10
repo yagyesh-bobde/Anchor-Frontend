@@ -1,10 +1,10 @@
 .user_model{
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 99;
+    z-index: 99999;
     width: 100vw;
-    height: 200vh;
+    height: 100vh;
     display: grid;
 }
 

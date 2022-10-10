@@ -56,8 +56,8 @@
 .login_button_user{
   cursor: pointer;
   margin-top: 10px;
-  background-color: #f1eee8;
-  color: #b3b5b7 !important;
+  background-color: #d2cfcf;
+  color: #403e3e !important;
   border-radius: 20px;
   font-weight: 700 !important;
   width: 70px;
@@ -130,6 +130,7 @@
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  width: 100%;
 }
 
 .profile_pic_creator {
@@ -143,6 +144,7 @@
   flex-direction: column;
   margin: 0 55px;
   justify-content: space-evenly;
+  width: 75%;
 }
 
 .creator_name {
@@ -156,6 +158,7 @@
   font-size: 1.2rem;
   font-weight: 400;
   color: grey;
+  width: 100%;
   margin-bottom: 0.5rem;
 }
 
@@ -438,7 +441,7 @@
 
 
     .creator_profile_details{
-      width: 90vw;
+      width: 90vw !important;
     }
 
     .main_details_profile{
@@ -449,6 +452,7 @@
       align-items: center;
       margin: 0;
       margin-top: 14px;
+      width: 100%;
       
     }
     .about_creator_profile div{

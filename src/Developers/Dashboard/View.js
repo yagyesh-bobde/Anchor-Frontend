@@ -23,6 +23,7 @@ function View() {
         if (json.success) {
             localStorage.setItem("jwtToken",json.jwtToken)
             localStorage.setItem("isUser","")
+            localStorage.setItem("from","linkedin")
         }
        
     };

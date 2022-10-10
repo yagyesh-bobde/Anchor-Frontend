@@ -4,28 +4,33 @@ import "./Info_creator.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactEditor from "../Editor/Editor";
+import ServiceContext from "../../Context/services/serviceContext";
 
 
 
 function Info_creator(props) {
   const { allCreatorInfo, getAllCreatorInfo, setCreatorInfo } = useContext(creatorContext)
+  const {Uploadfile} = useContext(ServiceContext)
   const [Content, setContent] = useState()
+  const [previewSourceOne, setPreviewSourceOne] = useState(""); // saves the data of file selected in the form
   const [data, setdata] = useState({
     name: "",
     phone: 0,
     tagLine: "",
     linkedInLink: "",
-    ytLink: "",
+    ytLink: "", 
     instaLink: "",
     fbLink: "",
     twitterLink: "",
   });
 
 
+  const data1 = new FormData();
+  data1.append("file", previewSourceOne);
 
   useEffect(() => {
     getAllCreatorInfo()
-  
+    // eslint-disable-next-line
   }, [])
   
 useEffect(() => {
@@ -33,6 +38,7 @@ useEffect(() => {
       ...data,
       ...allCreatorInfo
     })
+    // eslint-disable-next-line
   }, [getAllCreatorInfo])
   
 
@@ -45,6 +51,11 @@ useEffect(() => {
     this.style.height = this.scrollHeight + "px";
   }
 
+  const handleChangeFileOne = (e) => {
+    const file = e.target.files[0];
+    setPreviewSourceOne(file);
+  };
+
   // Change in values of input tags
   const handleChange = (e) => {
     setdata({ ...data, [e.target.name]: e.target.value });
@@ -53,7 +64,8 @@ useEffect(() => {
   const onSubmit = async (e) => {
     props.progress(0)
     e?.preventDefault()
-    const newData = {...data,aboutMe:Content}
+    var profile = await Uploadfile(data1);
+    const newData = {...data,aboutMe:Content,profile:profile?.url}
     const success = setCreatorInfo(newData)
     if(success){
       toast.success("Changes Saved Successfully ",{
@@ -64,6 +76,7 @@ useEffect(() => {
           position:"top-center",
           autoClose:2000
     })}
+  
     props.progress(100)
   
   }
@@ -109,6 +122,21 @@ useEffect(() => {
               
               placeholder="Ex. Product Manager at Google"
             />
+
+<label htmlFor="cpic" className="entry_labels">
+                Profile Image <small>*</small>
+              </label>
+              <input
+                type="text"
+                name="cpic"
+                id="cpic"
+                placeholder="Upload Image..."
+                onFocus={(e) => {
+                  e.target.type = "file";
+                }}
+                onChange={handleChangeFileOne}
+              />
+
             <label htmlFor="linkedInLink" className="entry_labels">
               LinkedIn Link <small>*</small>
             </label>

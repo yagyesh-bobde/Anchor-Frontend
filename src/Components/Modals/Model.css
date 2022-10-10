@@ -1,9 +1,9 @@
 .model{
-    width: 98%;
+    width: 101%;
     height: 93vh;
     background-color: #f8f8f882;
     position: absolute;
-    left: -1vw;
+    left: -2vw;
     top: -30vh;
 }
 .model_logout{
@@ -81,7 +81,7 @@
 
 
 .loading_bar{
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
@@ -98,9 +98,26 @@
     -webkit-animation: rotating 1.5s linear infinite;
 }
 
+.loadbar2{
+    position: fixed;
+    top: 10vh;
+    bottom: 2vh;
+    left: 19vw;
+    right: 5vw;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent !important;
+}
+
+.load2{
+    width: 2rem !important;
+}
+
 
 .fb_modal{
-    position: absolute;
+    position: fixed !important;
     width: 100vw;
     height: 150vh;
     top: 0;
@@ -154,6 +171,59 @@
 .fb_modal_main_box i:hover{
     transform: scale(1.18);
     color: red;
+}
+
+/* Email Modal */
+
+.email_box{
+    width: 800px;
+    height: 650px;
+    margin-top: 3vh;
+    margin-left: 13vw;
+}
+
+
+.email_form{
+    margin-top: -20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    height: max-content;
+}
+
+.email_box div{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    justify-content: space-between;
+}
+
+.email_box label{
+    color: rgb(97,97,100);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.email_box div input{
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 2px solid rgb(97, 97, 100);
+    font-size: 1.1rem;
+    padding: 2px;
+}
+
+
+.email_box div textarea{
+    border-radius: 5px;
+    border: 2px solid rgb(97, 97, 100);
+    font-size: 1.1rem;
+    padding: 2px;
+    width: 100%;
+    min-height: 250px;
+    resize:none;
 }
 
 

@@ -8,6 +8,12 @@
 
 }
 
+.buy_form{
+    position: fixed;
+    top: 30vh;
+    left: 50vw;
+}
+
 .about_c{
     text-align: center;
     display: none;
@@ -15,7 +21,7 @@
 
 .service_page_creator{
     border: none;
-    width: 100%;
+    width: 75%;
     display: flex;
     margin-top: 10vh;
     align-items: center;
@@ -79,6 +85,62 @@
     margin-right: 10px;
 }
 
+/* price card css */
+.price_card{
+    display: flex;
+    background-color: #9d9c9c;
+    width: 30vw;
+    height: 30vh;
+    border-radius: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 59px;
+    
+}
+
+.price_card h2{
+    color: rgb(0, 0, 0);
+    text-decoration: underline;
+}
+
+.price_card > div{
+    display: flex;
+
+    
+}
+
+.price_card > div > div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 1.4rem;
+    margin: 0 5px;
+    color: rgb(0, 0, 0);
+    font-weight: 600;
+    height: 110%;
+}
+
+.price_card > div > div span:last-child{
+    font-weight: bold;
+}
+
+
+.right_service_section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: max-content;
+    
+}
+
+.right_section_mobile_notpaid{
+    height: max-content;
+}
+
+
 .share_on_whatsapp{
     width: 100%;
     display: flex;
@@ -130,15 +192,64 @@
     text-decoration:none
 }
 
+/* mobile price description */
+.mobile_price_desc{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 8px 0;
+    display: none;
+}
+
+.mobile_price_desc >div{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 1rem;
+}
+
+.main_ssp{
+    font-weight: bold;
+}
+
 
 @media (max-width: 500px) {
+    .price_card{
+        display: none;
+    }
+
+    .mobile_price_desc{
+        display: flex;
+    }
+
+    .right_service_section{
+        height: max-content;
+        width: 100%;
+        position: fixed;
+        bottom: 3px;
+        flex-direction: row;
+        align-items: center;
+        border-top: 2px solid grey;
+        background-color: rgb(255, 255, 255) !important;
+    }
+
+    .right_section_mobile_notpaid{
+        background: transparent !important;
+        border: none !important;
+        display: block !important;
+        flex: unset !important;
+        text-align: center !important;
+        bottom: 3px !important;
+    }
+
     .service_section_content{
         width: 100vw;
     }
 
     .service_page_creator{
         width: 85%;
-        height: 60vh;
+        height: max-content;
+        min-height: 60vh;
         margin-top: 22px;
         border: none;
         border-radius: 25px;
@@ -148,6 +259,10 @@
     .profile_pic_creator{
         width: 4.6rem;
         height: 4.6rem;
+    }
+
+    .service_main_details_profile{
+        margin: 25px 0;
     }
 
     .about_c{
@@ -164,6 +279,7 @@
 
     .creator_tagline{
         font-size: 1.1rem;
+        text-align: center !important;
     }
 
     .service_section_details{
@@ -208,14 +324,20 @@
     }
 
     .download_service{
-        width: 97%;
-        position: fixed;
-        bottom: 4px;
-        height: 53px;
-        font-size: 1.2rem;
+        width: 46%;
+        height: 50px;
+        font-size: 1rem;
         padding: 8px;
+        margin: 8px 0 8px 50px;
         font-weight: 500;
         border-radius: 10px;
+    }
+
+    .download_service_mobile_notpaid{
+        width: 98% !important;
+        margin: 0 !important;
+        font-size: 1.2rem;
+        height: 54px;
     }
 
     .share_on_whatsapp{
@@ -245,7 +367,7 @@
         /* color: black; */
         font-weight: 500;
         height: 70px;
-        margin-bottom: 60px;
+        margin-bottom: 70px;
         margin-top: 7vh;
         box-shadow: 0px 0px 8px 4px #eeeeee;
         background-color: #eeeeee !important;

@@ -21,6 +21,7 @@ import {mixPanelToken} from "./config/config.js"
 import Main from "./Components/Main Page/Main";
 import View from "./Developers/Dashboard/View";
 import Login from "./Developers/Login/Login";
+import PaymentState from "./Context/PaymentState";
 
 
 
@@ -40,7 +41,8 @@ function App() {
     
     <LinkedinState>
     <ServiceState>
-       <CreatorState> 
+       <CreatorState>
+        <PaymentState>
          <UserState> 
           <FeedbackState>
          <LoadingBar
@@ -57,7 +59,7 @@ function App() {
           <Route path="/developer/count" element={<UserCount/>}></Route>  
           <Route path="/developer/admin" element={<View/>}></Route>  
           <Route path="/developer/login" element={<Login/>}></Route>  
-          <Route path="/feedback/:slug" element={<Feedback progress={changeprogress}/>}></Route>  
+          <Route path="/feedback" element={<Feedback progress={changeprogress}/>}></Route>  
           {localStorage.getItem("jwtToken") && 
           <Route
               path="/logout"
@@ -70,6 +72,7 @@ function App() {
 
         </FeedbackState>
      </UserState> 
+     </PaymentState> 
        </CreatorState> 
     </ServiceState>
        </LinkedinState>
