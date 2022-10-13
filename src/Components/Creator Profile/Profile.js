@@ -363,7 +363,7 @@ function Profile(props) {
           modules={[Autoplay,Pagination]}
           className="mySwiper"
         >
-          {feedbacks?.length !== 0 &&
+          {feedbacks?.length !== 0 ?
             feedbacks?.map((e2, index) => {
               return (
                 <SwiperSlide key={index}>
@@ -380,7 +380,9 @@ function Profile(props) {
                   </div>
                 </SwiperSlide>
               );
-            })}
+            }):(
+              <h1 className="no_services">No comments to display</h1>
+            )}
         </Swiper>
       </div>
     </>

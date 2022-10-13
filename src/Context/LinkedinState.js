@@ -9,10 +9,9 @@ const LinkedinState = (props) => {
   const navigate = useNavigate();
   const [loginInfo, setloginInfo] = useState({});
   const [openModelFB, setOpenModelFB] = useState(false);    // for feedback popup
-  const [Status, setStatus] = useState();
   const [FBService, setFBService] = useState();
 
-  const loginCreator = async () => {
+  const creatorLinkedinLogin = async () => {
     fetch(`${host}/login/creator/success`, {
       method: "GET",
       credentials: "include",
@@ -29,7 +28,7 @@ const LinkedinState = (props) => {
         if (resJSON.success) {
           const login = resJSON.res;
           setloginInfo(login);
-          registerCreatorLogin(login.id, login.name, login.email, login.photo);
+          registerCreatorLogin(login.id,"", login.name, login.email, login.photo);
         } else {
           toast.error("Login Failed! Please Try Again", {
             position: "top-center",
@@ -47,7 +46,42 @@ const LinkedinState = (props) => {
       });
   };
 
-  const registerCreatorLogin = async (linkedinID, name, email, photo, slug) => {
+  const creatorGoogleLogin = async () => {
+    fetch(`${host}/google/login/success`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((resJson) => {
+        if (resJson.success) {
+          const login = resJson.res;
+          setloginInfo(login);
+          registerCreatorLogin("", login.id, login.name, login.email, login.photo);
+        } else {
+          toast.error("Login Failed! Please Try Again", {
+            position: "top-center",
+            autoClose: 1500,
+          });
+          navigate("/login/creators");
+        }
+      })
+      .catch((error) => {
+        toast.error("Login Failed! Please Try Again", {
+          position: "top-center",
+          autoClose: 1500,
+        });
+        navigate("/login/creators");
+      });
+  };
+
+  const registerCreatorLogin = async (linkedinID,googleID, name, email, photo) => {
     let slugurl = name.split(" ").join("-");
     const count = await getslugcountcreator(slugurl.toLowerCase());
     let slugurl2 =
@@ -64,6 +98,7 @@ const LinkedinState = (props) => {
       },
       body: JSON.stringify({
         linkedinID,
+        googleID,
         name,
         email,
         photo,
@@ -72,7 +107,6 @@ const LinkedinState = (props) => {
     });
     const res = await response.json();
     if (res.success) {
-      console.log(res)
       const status = await getStatus(res.jwtToken);
       if (status === 1) {
         localStorage.setItem("jwtToken", res.jwtToken);
@@ -304,14 +338,14 @@ const LinkedinState = (props) => {
       value={{
         usergooglelogin,
         loginlinkedinUser,
-        loginCreator,
+        creatorLinkedinLogin,
+        creatorGoogleLogin,
         getStatus,
-        Status,
         FBService,
         openModelFB,
+        checkFBlatest,
         setOpenModelFB,
         loginInfo,
-        registerCreatorLogin
       }}
     >
       {props.children}

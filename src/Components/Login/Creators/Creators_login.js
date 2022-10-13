@@ -18,8 +18,16 @@ function Creators_login() {
   //  }
   //}
 
-  const _handleSignInClick = async () => {
+  const handleGoogle = async() => {
     localStorage.setItem('isUser' , "")
+    localStorage.setItem('from','google')
+    window.open(`${host}/google/auth`, "_self");
+  }
+
+
+  const handlelinkedin = async () => {
+    localStorage.setItem('isUser' , "")
+    localStorage.setItem('from','linkedin')
     window.open(`${host}/login/auth/linkedin`, "_self");
   };
 
@@ -40,11 +48,14 @@ function Creators_login() {
         <div className="login_container">
           <h2>Welcome Back Anchorite</h2>
           <img src={require("../../logo2.png")} alt="logo" />
-          <button className="linkedin_auth_link" onClick={_handleSignInClick} >
+          <button className="linkedin_auth_link" onClick={handlelinkedin} >
             <i className="fa-brands fa-linkedin-in"></i> Login with LinkedIn
           </button>
-          {/* <div className="or_section"><hr/>or<hr/></div>
-          <form>
+          <div className="or_section"><hr/>or<hr/></div>
+          <button className="google_auth_link" onClick={handleGoogle} >
+            <i className="fa-brands fa-google"></i> Login with Google
+          </button>
+          {/* <form>
             <input
               className="input_cred"
               type="email"
@@ -67,8 +78,7 @@ function Creators_login() {
             <label htmlFor="show_pass" onClick={handleShowPassword}>Show Password</label>
             </div>
             <input disabled={true} type="submit" className="login_submit" value="Login" />
-          </form>
-        </div> */}
+          </form> */}
       </div>
     </div>
     </div>

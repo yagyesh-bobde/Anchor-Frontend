@@ -6,7 +6,7 @@ function Feedback_Modal({open, onClose, name,slug}) {
     const navigate = useNavigate()
 
     const handleClick = () =>{
-        navigate(`/feedback/${slug}`)
+        navigate(`/feedback/`)
     }
 
     if (!open) {

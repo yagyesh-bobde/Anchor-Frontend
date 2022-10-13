@@ -9,14 +9,14 @@ import Subscribers from "../Subscribers/Subscribers";
 import { linkedinContext } from "../../Context/LinkedinState";
 import { ToastContainer,toast } from "react-toastify";
 import "./Home.css";
-import Loading from "../Modals/Loading";
+import {LoadOne} from "../Modals/Loading";
 
 
 
 function Home(props) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { loginlinkedinUser, usergooglelogin, loginCreator } =
+  const { loginlinkedinUser, usergooglelogin, creatorLinkedinLogin,creatorGoogleLogin } =
     useContext(linkedinContext);
 
 
@@ -31,12 +31,14 @@ function Home(props) {
       navigate(`${localStorage.getItem("url")}`);
     } else if (
       localStorage.getItem("isUser") === "" &&
-      !localStorage.getItem("from")
+      localStorage.getItem("from")
     ) {
-      loginCreator();
-
-    }else if (localStorage.getItem('isAdmin') === true){
-      navigate('/dashboard')
+      if (localStorage.getItem("from") === "linkedin") {
+        creatorLinkedinLogin();
+      } else {
+        console.log("working")
+        creatorGoogleLogin();
+      }
     } else {
       if (localStorage.getItem("url")) {
         navigate(`${localStorage.getItem("url")}`);
@@ -50,7 +52,7 @@ function Home(props) {
   return (
     <>
       <ToastContainer />
-      {location.pathname === "/check" && <Loading/>}
+      {location.pathname === "/check" && <LoadOne/>}
       <div className="main_box">
         <Navbar />
         <div className="right_container">

@@ -61,7 +61,7 @@ const UserState = (props) => {
 
 
     // ROUTE 3 : USER ORDER
-    const userPlaceOrder = async ( amount , status , serviceid,creatorId ) => {
+    const userPlaceOrder = async ( amount , status , serviceid, creatorId ,razorpayPaymentId , razorpayOrderId , razorpaySignature  ) => {
         const response = await fetch(`${host}/api/user/service/neworder/${serviceid}`, {
             method: 'POST',
             headers: {
@@ -71,7 +71,7 @@ const UserState = (props) => {
                 'jwt-token': localStorage.getItem('jwtToken')
             },
             body: JSON.stringify({
-                amount , status 
+                amount , status , razorpayPaymentId , razorpayOrderId , razorpaySignature 
             })
         })
         const json = await response.json();

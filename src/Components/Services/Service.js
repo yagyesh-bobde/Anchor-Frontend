@@ -1,10 +1,12 @@
-import React, { useContext, useEffect } from "react";
-import Service_detail from "../Service Detail/Service_detail";
+import React, { useContext, useEffect,useState } from "react";
+import ServiceDetail from "../Service Detail/ServiceDetail";
 import "./Service.css";
 import ServiceContext from "../../Context/services/serviceContext";
+import { LoadTwo } from "../Modals/Loading";
 
 
 function Service(props) {
+  const [openLoading, setOpenLoading] = useState(true)
   const context = useContext(ServiceContext);
   const { services, getallservices } = context;
 
@@ -13,7 +15,10 @@ function Service(props) {
 
 
   useEffect(() => {
-    getallservices();
+    getallservices().then(()=>{
+    })
+    setOpenLoading(false)
+    // eslint-disable-next-line
   }, [services]);
 
   return (
@@ -32,12 +37,14 @@ function Service(props) {
           <span>Action</span>
         </div>
       </div>
+
+      {openLoading && <LoadTwo open={openLoading}/>}
       <div className="service_details_body">
         {services.res?.map((e) => {
-          if (e.status == 1) {
+          if (e.status === 1) {
             count = count + 1;
             return (
-              <Service_detail
+              <ServiceDetail
                 key={e._id}
                 sno={count}
                 service={e}
