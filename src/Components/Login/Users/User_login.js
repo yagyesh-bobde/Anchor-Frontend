@@ -1,19 +1,25 @@
-import React , { useContext } from 'react'
-import { useLocation } from 'react-router-dom';
-import { linkedinContext } from '../../../Context/LinkedinState';
+import React ,{useEffect} from 'react'
+import { Link, useLocation } from 'react-router-dom';
 import "./User_login.css"
 import { host } from '../../../config/config';
+import mixpanel from "mixpanel-browser"
 
 
 
 
 function User_login({open,onClose}) {
   const location = useLocation()
+
+
   if (!open) {
     return null;
   }
 
+
   const handleGoogle = async() => {
+    mixpanel.track("User login through Google" , {
+      user:""
+  })
     localStorage.setItem('isUser', true)
     localStorage.setItem('from','google')
     localStorage.setItem('url', location.pathname)
@@ -21,6 +27,9 @@ function User_login({open,onClose}) {
   }
 
   const _handlelinkedin = async () => {
+    mixpanel.track("User login through Linkedin" , {
+      user:""
+  })
     localStorage.setItem('isUser', true)
     localStorage.setItem('from', 'linkedin')
     localStorage.setItem('url', location.pathname)
@@ -28,9 +37,9 @@ function User_login({open,onClose}) {
   };
 
   return (
-    <div onClick={onClose} className="model user_model">
-      <div className="model_main_box user_model_box">
-        <img src="https://about.netflix.com/images/meta/netflix-symbol-black.png" alt="logo" />
+    <div onClick={onClose} className="user_model">
+      <div onClick={(e)=>e.stopPropagation()} className="model_main_box user_model_box">
+        <img src={require("../../logo2.png")} alt="logo" />
         <span className="usermodel_question">
           Login with Anchors
         </span>
@@ -38,13 +47,14 @@ function User_login({open,onClose}) {
           <button className="model_button" onClick={_handlelinkedin} >
             <i class="fa-brands fa-linkedin-in fa-lg"></i> Login with LinkedIn
           </button>
-        <button className="model_button" onClick={handleGoogle} >
+        <button  className="model_button" onClick={handleGoogle} >
         <i class="fa-brands fa-google fa-lg"></i> Login with Google
           </button>
         </div>
-        <span className="terms_conditions">By going forward, you're agreeing to Anchors <span>Terms of use</span> and <span> Privacy Policies</span>.</span>
+        <span className="terms_conditions">By going forward, you're agreeing to Anchors <span>Terms of use</span> and <Link to="/privacy-policy" target="_blank"><span> Privacy Policies</span></Link>.</span>
       </div>
     </div>
+    
   )
 }
 

@@ -5,10 +5,12 @@ import { host } from "../config/config";
 export const creatorContext = createContext();
 
 const CreatorState = (props) => {
-    const [isCreatorlogedin, setisCreatorlogedin] = useState(false)
     const [basicCreatorInfo, setbasicCreatorInfo] = useState({})
+    const [basicCdata, setbasicCdata] = useState({})
+    const [basicNav, setbasicNav] = useState({})
     const [allCreatorInfo, setallCreatorInfo] = useState({})
-    const [creatorId, setCreatorId] = useState(null)
+    const [FeedbackStats, setFeedbackStats] = useState()
+    const [RequestsStats, setRequestsStats] = useState()
 
     const [allSubscribers, setallSubscribers] = useState([])
     const [subsInfo, setsubsInfo] = useState([])
@@ -38,19 +40,17 @@ const CreatorState = (props) => {
                 phone: info.phone,
                 aboutMe : info.aboutMe,
                 tagLine: info.tagLine,
+                profile: info.profile,
                 linkedInLink: info.linkedInLink,
                 twitterLink : info.twitterLink,
                 ytLink: info.ytLink,
                 instaLink: info.instaLink,
-                fbLink: info.fbLink
+                fbLink: info.fbLink,
+                teleLink: info.teleLink
             }) 
             })
             const json = await response.json()
-            if(json.success){
-                alert("Information Saved")
-            } else{
-                alert("Error: Unable to save information. Please try again later.")
-            }
+            return json.success
     }   
 
     // ROUTE 4 : Get Basic Creator Info -> No login required
@@ -66,6 +66,7 @@ const CreatorState = (props) => {
         const json = await response.json()
         if (json.success) {
             setbasicCreatorInfo(json.res)
+            setbasicCdata(json.other)
         } else {
             console.error(json.error)
         }
@@ -76,16 +77,15 @@ const CreatorState = (props) => {
         const response = await fetch(`${host}/api/creator/idwithslug/${slug}`, {
             method: "GET",
             headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true
+                "Access-Control-Allow-Origin": true
             }
         })
         const json = await response.json()
         if (json.success) {
+            await getBasicCreatorInfo(json.res._id)
             return json.res._id
         } else {
-            alert(json.error)
+            //alert(json.error)
         }
     }
 
@@ -104,14 +104,38 @@ const CreatorState = (props) => {
         const json = await response.json();
         if (json.success) {
             setallCreatorInfo(json.res)
+            setbasicNav(json.other)
         } else {
-            alert(json.error)
+            //alert(json.error)
+        }
+    }
+
+    // get status of a creator 
+    const getStatus = async()=>{
+        const response = await fetch(`${host}/api/creator/getstatus`,{
+            method: 'GET',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Credentials": true,
+                'jwt-token': localStorage.getItem('jwtToken')
+            }
+        })
+        const json = await response.json()
+        if(json.success){
+
+            return json
+        }else{
+            //console.log(json.error)
         }
     }
     
 
 
     // FETCH ALL SUBSCRIBERS
+
+    const [paging, setpaging] = useState({})
+
     const getAllSubscribers = async() => {
         const response = await fetch(`${host}/api/subscribe/getall`, {
             method: "GET",
@@ -125,10 +149,18 @@ const CreatorState = (props) => {
         const json = await response.json()
         if(json.success){
             setallSubscribers(json.res)
+            setpaging({     // it is the count details of subs
+                ...paging,
+                ...json.info
+            })
+            return json.res
         } else {
-            return alert(json.error)
+            //return alert(json.error)
+            return json.success;
         }
+
     }
+
 
     // SUBSCRIBER COUNTS => TOTAL < FREE < PAID
     const getSubCounts = () => {
@@ -151,35 +183,95 @@ const CreatorState = (props) => {
     }
 
     // FETCH SUBSCRIBER INFO
-    const getSubsInfo = async () => {
+    const getSubsInfo = async (subsData=[]) => {
         let allInfo = []
-        for (let i of allSubscribers) {
-            let info = await getUserInfo(i.userID.toString())
+        for (let i of subsData) {
+            let info = await getUserInfo(i?.userID?.toString())
             allInfo.push(info)
         }
         setsubsInfo(allInfo)
+        return allInfo
     }
+
     const getUserInfo = async (id) => {
         const response = await fetch(`${host}/api/user/info/advanced/${id}`, {
             method: 'GET',
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
-                'jwt-token':localStorage.getItem('jwtToken')
+                "Access-Control-Allow-Credentials": true
         }
         })
         const json = await response.json()
         if (json.success){
             return json.res
         } else{
-            alert(json.error)
+            //alert(json.error)
+        }
+    }
+
+
+    // get all feebacks on creator id
+    const getAllFeedbacks = async (id) => {
+        const response = await fetch(`${host}/api/query/getFeedbacks`, {
+            method: 'GET',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Credentials": true,
+                "jwt-token":localStorage.getItem("jwtToken")
+        }
+        })
+        const json = await response.json()
+        if (json.success){
+            setFeedbackStats(json.stats)   // total review count for dashboard
+            return json.res
+        } else{
+            //alert(json.error)
+        }
+    }
+
+
+    // change feedback status fro creator
+    const updateFeedbackStatus = async (id) => {
+        const response = await fetch(`${host}/api/query/changeStatus/feedback/${id}`, {
+            method: 'GET',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Credentials": true,
+                "jwt-token":localStorage.getItem("jwtToken")
+        }
+        })
+        const json = await response.json()
+        return json.success
+    }
+
+
+    // display all queries for creator
+    const getUserQueries = async () => {
+        const response = await fetch(`${host}/api/query/getQuerries`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Credentials": true,
+                "jwt-token" : localStorage.getItem('jwtToken')
+            },
+        })
+        const json = await response.json()
+        if (json.success) {
+            setRequestsStats(json.stats)   // total requests count for dashboard
+            return json.res
+        } else{ 
+            //  toastify error
         }
     }
 
 
     return (
-        <creatorContext.Provider value={{ allSubscribers, subscriberCount,creatorId,getcreatoridUsingSlug, getAllCreatorInfo, getBasicCreatorInfo, basicCreatorInfo, allCreatorInfo, getAllSubscribers, subsInfo, getSubsInfo, getSubCounts, setsubsInfo, setCreatorInfo }}>
+        <creatorContext.Provider value={{ RequestsStats,FeedbackStats,getUserQueries,updateFeedbackStatus,getAllFeedbacks,basicNav,paging,basicCdata,getUserInfo, allSubscribers, subscriberCount,getStatus,getcreatoridUsingSlug, getAllCreatorInfo, getBasicCreatorInfo, basicCreatorInfo, allCreatorInfo, getAllSubscribers, subsInfo, getSubsInfo, getSubCounts, setsubsInfo, setCreatorInfo }}>
             {props.children}
         </creatorContext.Provider>
     )

@@ -4,6 +4,10 @@
     --font: "'Inter', sans-serif"
 }
 
+.creator_info{
+    margin-top: 10px !important;
+}
+
 .creator_info textarea{
     min-height: 18vh;
     font-size: 18px;

@@ -3,24 +3,37 @@ import { creatorContext } from "../../Context/CreatorState";
 import "./Info_creator.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReactEditor from "../Editor/Editor";
+import ServiceContext from "../../Context/services/serviceContext";
+import { LoadTwo } from "../Modals/Loading";
+
 
 
 function Info_creator(props) {
   const { allCreatorInfo, getAllCreatorInfo, setCreatorInfo } = useContext(creatorContext)
+  const {Uploadfile} = useContext(ServiceContext)
+  const [Content, setContent] = useState()
+  const [openLoading, setOpenLoading] = useState(false)
+  const [previewSourceOne, setPreviewSourceOne] = useState(""); // saves the data of file selected in the form
   const [data, setdata] = useState({
     name: "",
     phone: 0,
     tagLine: "",
-    aboutMe: "",
     linkedInLink: "",
-    ytLink: "",
+    ytLink: "", 
     instaLink: "",
-    fbLink: "",
+    fbLink:"",
+    teleLink: "",
     twitterLink: "",
   });
+
+
+  const data1 = new FormData();
+  data1.append("file", previewSourceOne);
+
   useEffect(() => {
     getAllCreatorInfo()
-  
+    // eslint-disable-next-line
   }, [])
   
 useEffect(() => {
@@ -28,6 +41,7 @@ useEffect(() => {
       ...data,
       ...allCreatorInfo
     })
+    // eslint-disable-next-line
   }, [getAllCreatorInfo])
   
 
@@ -40,6 +54,11 @@ useEffect(() => {
     this.style.height = this.scrollHeight + "px";
   }
 
+  const handleChangeFileOne = (e) => {
+    const file = e.target.files[0];
+    setPreviewSourceOne(file);
+  };
+
   // Change in values of input tags
   const handleChange = (e) => {
     setdata({ ...data, [e.target.name]: e.target.value });
@@ -47,16 +66,31 @@ useEffect(() => {
 
   const onSubmit = async (e) => {
     props.progress(0)
-    const id = toast.loading("Please wait...",{
-      position: "top-center"
-    })
-    e.preventDefault()
-    setCreatorInfo(data)
+    setOpenLoading(true)
+    e?.preventDefault()
+    var profile = await Uploadfile(data1);
+    const newData = {...data,aboutMe:Content,profile:profile?.url}
+    const success = setCreatorInfo(newData)
+    if(success){
+      setOpenLoading(false)
+      toast.success("Changes Saved Successfully ",{
+        position:"top-center",
+        autoClose:2000
+      })}else{
+        setOpenLoading(false)
+        toast.error("Changes Not Saved ",{
+          position:"top-center",
+          autoClose:2000
+    })}
+  
     props.progress(100)
-    toast.update(id, {render: "Changes Saved Successfully ", type: "success", isLoading: false,autoClose: 3000});
+  
   }
 
   return (
+    <>
+    <ToastContainer/>
+    {openLoading && <LoadTwo open={openLoading} />}
     <div className="create_box creator_info">
       <form  onSubmit={e => onSubmit(e)} className="entries">
         <div>
@@ -95,20 +129,21 @@ useEffect(() => {
               
               placeholder="Ex. Product Manager at Google"
             />
-            <label htmlFor="aboutMe" className="entry_labels">
-              About Me <small>*</small>
-            </label>
-            <textarea
-              name="aboutMe"
-              onChange={handleChange}
-              value={data.aboutMe}
-              id="about"
-              
-              placeholder="Please describe your service..."
-            />
-            
-          </div>
-          <div className="right_entry_box">
+
+<label htmlFor="cpic" className="entry_labels">
+                Profile Image
+              </label>
+              <input
+                type="text"
+                name="cpic"
+                id="cpic"
+                placeholder="Upload Image..."
+                onFocus={(e) => {
+                  e.target.type = "file";
+                }}
+                onChange={handleChangeFileOne}
+              />
+
             <label htmlFor="linkedInLink" className="entry_labels">
               LinkedIn Link <small>*</small>
             </label>
@@ -120,6 +155,8 @@ useEffect(() => {
               value={data.linkedInLink}
               
             />
+          </div>
+          <div className="right_entry_box">
             <label htmlFor="ytLink" className="entry_labels">
               Youtube Link 
             </label>
@@ -140,15 +177,15 @@ useEffect(() => {
               onChange={handleChange}
               value={data.instaLink}
             />
-            <label htmlFor="fbLink" className="entry_labels">
-              Facebook Link 
+            <label htmlFor="teleLink" className="entry_labels">
+              Telegram Link 
             </label>
             <input
               type="url"
-              name="fbLink"
-              id="fbLink"
+              name="teleLink"
+              id="teleLink"
               onChange={handleChange}
-              value={data.fbLink}
+              value={data.teleLink}
             />
             <label htmlFor="twitterLink" className="entry_labels">
               Twitter Link 
@@ -163,12 +200,16 @@ useEffect(() => {
             
           </div>
         </div>
-
-        <button className="submit_button" type="submit">
+      </form>
+      <label className="editor_entry_labels">
+              About Me <small>*</small>
+            </label>
+      <ReactEditor readOnly = {false} content={allCreatorInfo?.aboutMe} setContent={setContent} />
+        <button className="submit_button" onClick={onSubmit}>
           Save Details
         </button>
-      </form>
     </div>
+    </>
   );
 }
 

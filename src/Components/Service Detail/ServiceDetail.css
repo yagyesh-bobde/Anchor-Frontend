@@ -1,0 +1,133 @@
+.serv_details{
+    width: 99%;
+    display: grid;
+    /* grid-template-columns: 5% 18% 10% 10% 12% 10% 10% 9% 9% 7%; */
+    grid-template-columns: 4% 22% 10% 10% 10% 10% 10% 10% 7% 9%;
+    height: 63px;
+    align-items: center;
+    font-size: 17px;
+    border-radius: 5px;
+    color: rgba(46, 43, 43, 0.808);
+    margin-bottom: 20px;
+    margin-left: -10px;
+}
+
+.serv_details span{
+    text-align: center;
+    
+}
+
+.serv_details span:nth-child(2){
+    word-wrap: break-word;
+}
+
+.serv_banner{
+    width: 65px;
+    height: 50px;
+}
+
+
+.serv_details a{
+    text-align: center;
+}
+
+.serv_email{
+    color: rgb(132 75 145)  ;
+    cursor: pointer;
+}
+
+.display_action_icons{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.delete_serv{
+    cursor: pointer;
+    margin-left: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 5px;
+    width: max-content;
+}
+
+.delete_serv i{
+    position: sticky;
+}
+
+.delete_serv span{
+    font-size: 1rem;
+    display: none;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+
+.delete_serv:hover span{
+    display: inline;
+}
+
+
+/* service on off button */
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 55px;
+    height: 30px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(24px);
+    -ms-transform: translateX(24px);
+    transform: translateX(24px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }

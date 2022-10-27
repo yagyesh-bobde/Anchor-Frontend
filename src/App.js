@@ -12,6 +12,22 @@ import LoadingBar from 'react-top-loading-bar'
 import Feedback from "./Components/Feedback/Feedback";
 import LinkedinState from "./Context/LinkedinState";
 import FeedbackState from "./Context/FeedbackState"
+import Privacy from "./Components/Privacy Policy/Privacy";
+import Waitlist from "./Components/Waitlist/Waitlist";
+import Logout_Model from "./Components/Modals/Logout_Model";
+import UserCount from "./Developers/Count/UserCount";
+import mixpanel from "mixpanel-browser"
+import {mixPanelToken} from "./config/config.js"
+import Main from "./Components/Main Page/Main";
+import View from "./Developers/Dashboard/View";
+import Login from "./Developers/Login/Login";
+import PaymentState from "./Context/PaymentState";
+import Redirect_serv from "./Components/Redirect_serv";
+import Test from "./Components/Editor/Test";
+
+
+
+mixpanel.init( mixPanelToken , { debug : true })
 
 function App() {
   const [progress, setprogress] = useState(0)
@@ -27,7 +43,8 @@ function App() {
     
     <LinkedinState>
     <ServiceState>
-       <CreatorState> 
+       <CreatorState>
+        <PaymentState>
          <UserState> 
           <FeedbackState>
          <LoadingBar
@@ -36,9 +53,22 @@ function App() {
       />
         <Routes>
           <Route path="*" element={<Home progress={changeprogress}/>}></Route>    
-          <Route exact path="/creator/:slug" element={<Profile progress={changeprogress}/>}></Route>   
-          <Route path="/service/:slug" element={<Service progress={changeprogress}/>}></Route>  
-          <Route path="/feedback/:id" element={<Feedback progress={changeprogress}/>}></Route>  
+          <Route path="/" element={<Main/>}></Route>
+          <Route exact path="/c/:slug" element={<Profile progress={changeprogress}/>}></Route>   
+          <Route path="/s/:slug" element={<Service progress={changeprogress}/>}></Route>  
+          <Route path="/privacy-policy" element={<Privacy/>}></Route>  
+          <Route path="/waitlist" element={<Waitlist/>}></Route>  
+          <Route path="/r/:id" element={<Redirect_serv/>}></Route>  
+          <Route path="/developer/count" element={<UserCount/>}></Route>  
+          <Route path="/developer/admin" element={<View/>}></Route>  
+          <Route path="/developer/login" element={<Login/>}></Route>  
+          <Route path="/developer/test" element={<Test/>}></Route>  
+          <Route path="/feedback" element={<Feedback progress={changeprogress}/>}></Route>  
+          {localStorage.getItem("jwtToken") && 
+          <Route
+              path="/logout"
+              element={<Logout_Model progress={progress} />}
+            />}
           <Route path="/login">
             <Route path="creators" element={<Creators_login  progress={changeprogress}/>}/>
           </Route>
@@ -46,6 +76,7 @@ function App() {
 
         </FeedbackState>
      </UserState> 
+     </PaymentState> 
        </CreatorState> 
     </ServiceState>
        </LinkedinState>

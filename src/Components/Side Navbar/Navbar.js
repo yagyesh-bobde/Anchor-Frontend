@@ -1,24 +1,34 @@
-import React,{useContext} from "react";
+import React,{useContext,useEffect} from "react";
 import "./Navbar.css";
 import { Link, useLocation } from "react-router-dom";
 import { linkedinContext } from "../../Context/LinkedinState";
+import { creatorContext } from "../../Context/CreatorState";
+
 
 function Navbar() {
     const location = useLocation()
-    const {  loginInfo } = useContext(linkedinContext)
-    console.log(loginInfo)
-  
+    const {loginInfo} = useContext(linkedinContext)
+    const{getAllCreatorInfo,basicNav} = useContext(creatorContext)
+
+
+    useEffect(() => {
+      getAllCreatorInfo()
+    // eslint-disable-next-line
+    }, [])
+    
+    
+
   return (
     <div className="side_navbar">
-      <Link className="creators_profile" to="creator_profile">
+      <Link className="creators_profile" target="_blank" rel="noreferrer" to={`c/${localStorage.getItem("c_id")}`}>
 
         <img
-          src={loginInfo?.photo}
+          src={loginInfo?.photo ? loginInfo?.photo : basicNav?.photo}
           alt="..."
           className="c_pic"
         />
-        <span className="c_name">{loginInfo?.name}</span>
-        <span className="c_email">{loginInfo?.email}</span>
+        <span className="c_name">{loginInfo?.name ? loginInfo?.name : basicNav?.name}</span>
+        <span className="c_email">{loginInfo?.email ? loginInfo?.email : basicNav?.email}</span>
       </Link>
 
       <ul className="nav_items">
@@ -34,9 +44,15 @@ function Navbar() {
         <Link to="/servicelist" className={`${location.pathname==='/servicelist'?'active':""} items`}><li >
           Services Detail
         </li></Link>
-        <Link to="/logout" className={`${location.pathname==='/logout'?'active':""} items`}><li >
-          Logout
+        <Link to="/user_reviews" className={`${location.pathname==='/user_reviews'?'active':""} items`}><li >
+          User Reviews
         </li></Link>
+        <Link to="/user_requests" className={`${location.pathname==='/user_requests'?'active':""} items`}><li >
+          Requested Resources
+        </li></Link>
+        <a href="/logout" className={`${location.pathname==='/logout'?'active':""} items`}><li>
+          Logout
+        </li></a>
       </ul>
     </div>
   );

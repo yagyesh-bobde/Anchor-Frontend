@@ -1,16 +1,18 @@
 .user_model{
-
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 99;
+    z-index: 99999;
     width: 100vw;
-    height: 200vh;
+    height: 100vh;
+    display: grid;
+    background-color: rgba(255, 255, 255, 0.505);
 }
 
 .user_model_box{
     margin: 15vh auto;
     height: 70vh;
+    width: 31vw;
 }
 
 .user_model_box img{
@@ -69,4 +71,38 @@
     font-size: 1.3rem !important;
     color: blue !important;
     text-decoration:underline;
+}
+
+
+@media (max-width: 500px) {
+    .user_model_box{
+        width: 80vw;
+        height: 70vh;
+        margin-left: 10vw;
+        
+    }
+
+    .user_model_box img{
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .usermodel_question{
+        font-size: 1.3rem;
+    }
+
+
+    .user_model_button button{
+        width: 95%;
+        font-size: 1.1rem;
+    }
+
+    .terms_conditions{
+        font-size: 1.1rem;
+        width: 90%;
+    }
+
+    .terms_conditions span{
+        font-size: 1.2rem !important;
+    }
 }

@@ -1,6 +1,7 @@
 import React ,{useState}from "react";
 import "./Model.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 function Logout_Model() {
@@ -9,11 +10,26 @@ function Logout_Model() {
     const [openModel, setopenModel] = useState(true)
 
     const logout = () =>{
-      localStorage.removeItem("isUser")
-      localStorage.removeItem("jwtToken")      
-      localStorage.removeItem("from") 
-      localStorage.removeItem("url") 
-      navigate("/login/creators")     
+      if(localStorage.getItem("isUser") === ""){
+        localStorage.removeItem("isUser")
+        localStorage.removeItem("jwtToken")      
+        localStorage.removeItem("from") 
+        localStorage.removeItem("url") 
+        localStorage.removeItem("user") 
+        localStorage.removeItem("c_id") 
+        navigate("/")     
+      }
+      else{
+        localStorage.removeItem("isUser")
+        localStorage.removeItem("jwtToken")      
+        localStorage.removeItem("from") 
+        localStorage.removeItem("user") 
+        navigate(localStorage.getItem("url"))     
+      }
+      toast.success("Logged Out successfully", {
+        position: "top-center",
+        autoClose: 2000,
+      });
 
     }
 
@@ -24,8 +40,8 @@ function Logout_Model() {
  
 
   return (
-    <div onClick={()=>setopenModel(false)}  className="model_logout">
-      <div className="model_main_box">
+    <div onClick={()=>setopenModel(false)}  className="logout_model_logout">
+      <div onClick={(e)=>e.stopPropagation()} className="model_main_box">
         <span className="model_question">
           Are you sure you want to Logout?
         </span> 

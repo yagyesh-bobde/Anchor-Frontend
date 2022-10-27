@@ -1,52 +1,131 @@
-.rating{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin: 50px auto;
-    height: 67vh;
-    width: max-content;
 
+.design_box{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 30px;
+  width: 100%;
 }
 
 
-.rating h1{
-    font-size: 40px;
+.design_box img{
+  width: 25rem;
+  height: 25rem;
+  transform: rotate(20deg);
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  z-index: -9;
 }
 
-.stars{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 25vw;
+.rating {
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 30px;
+  border-radius: 10px;
+  /* background-color: rgba(238, 237, 237, 0.437); */
+  background-color: white;
+  border: 2px solid rgba(128, 128, 128, 0.616);
 }
 
-.stars i{
-    color: black;
+.rating h1 {
+  font-size: 35px;
+}
+
+.rating h1 span{
+  color: red;
+}
+
+.stars {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 25vw;
+  margin: 7vh 0;
+}
+
+.stars i {
+  color: grey;
+}
+
+.rating textarea {
+  resize: none;
+  padding: 20px;
+  width: 48vw;
+  min-height: 25vh;
+  border: 3px solid black;
+  font-size: 1.1rem;
+  border-radius: 5px;
+}
+
+.submit {
+  width: 15rem;
+  height: 3rem;
+  background-color: red;
+  border-radius: 7px;
+  border: 2px solid red;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 35px;
+  transition: transform 0.5s ease;
+}
+
+.submit:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 500px) {
+
+  .design_box{
+    /* background-color: red; */
+    height: max-content;
+    margin-top: 60px;
+  }
+
+  .design_box img{
+    width: 10rem;
+    height: 10rem;
+    top: 55px;
+    left: -20px;
+    transform: rotate(30deg);
     
     
-}
+  }
 
-.rating textarea{
-    resize: none;
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 5px;
-}
+  .rating{
+    width: 85%;
+  }
 
-.submit{
-    width: 15rem;
-    height: 3rem;
-    background-color: white;
-    border-radius: 7px;
-    border: 2px solid red;
-    color: red;
-    font-size: 1.3rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.5s ease;
-}
+  .rating h1{
+      font-size: 1.4rem;
+      text-align: center;
+  }
 
-.submit:hover{
-    transform: scale(1.05);
+    .rating textarea{
+      width: 70%;
+      font-size: 1rem;
+      min-height: 17vh !important;
+    }
+
+    .stars{
+        width: 70%;
+    }
+
+    .stars i{
+      width: 20px;
+    }
+
+    /* .submit{
+      position: sticky;
+      bottom: 25px;
+      width: 80vw;
+    } */
 }

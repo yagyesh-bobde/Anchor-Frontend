@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    margin: 39px 25px;
+    margin: 39px 20px;
     width: 75vw;
     height: 25vh;
     padding: 0 8px;
@@ -15,10 +15,11 @@
 }
 
 .services_table_head{
-    width: 100%;
+    width: 105%;
     background-color: #eeeeee;
     display: grid;
-    grid-template-columns: 5% 25% 10% 10% 15% 10% 10% 10% 5%;
+    /* grid-template-columns: 5% 18% 10% 10% 12% 10% 10% 9% 9% 7%; */
+    grid-template-columns: 5% 21% 10% 10% 10% 10% 10% 10% 7% 7%;
     height: 63px;
     align-items: center;
     font-size: 17px;
@@ -39,7 +40,7 @@
 
 .no_services{
     font-size: 1.5rem;
-    margin-top: 80px;
+    margin-top: 40px;
     color: grey;
     text-align: center;
 }

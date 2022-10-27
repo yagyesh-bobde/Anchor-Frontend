@@ -4,63 +4,64 @@ import { host } from "../config/config";
 export const userContext = createContext();
 
 const UserState = (props) => {
-    const [isuserLoggedIn, setisuserLoggedIn] = useState(false)
-    const [check, setcheck] = useState(false)
-
+  
 
     // ROUTE 1 : USER SIGN up
-    const userSignup = async( name, email, password, location) =>{
-        const response = await fetch(`${host}/api/user/createuser`, {
-            method: 'POST',
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true
-            },
-            body: JSON.stringify({
-                name,email, password ,location
-            })
-        })
-        const json = await response.json();
-        if (json.success) {
-            setisuserLoggedIn(true)
-            localStorage.setItem('jwtToken', json.jwtToken)
-        } else {
-            if (typeof (json.error) === 'object') {
-                 alert(json.error[0].msg)
-                return;
-            }
-            alert(json.error)
-        }
-    }
-    // ROUTE 2 : USER LOG IN
-    const userlogIn = async ( email, password) => {
-        const response = await fetch(`${host}/api/user/login`, {
-            method: 'POST',
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true
-            },
-            body: JSON.stringify({
-                 email, password
-            })
-        })
-        const json = await response.json();
-        if (json.success) {
-            setisuserLoggedIn(true)
-            localStorage.setItem('jwtToken', json.jwtToken)
-        } else {
-            if (typeof (json.error) === 'object') {
-                alert(json.error[0].msg)
-                return;
-            }
-            alert(json.error)
-        }
-    }
+    //const userSignup = async( name, email, password, location) =>{
+    //    const response = await fetch(`${host}/api/user/createuser`, {
+    //        method: 'POST',
+    //        headers: {
+    //            Accept: "application/json",
+    //            "Content-Type": "application/json",
+    //            "Access-Control-Allow-Credentials": true
+    //        },
+    //        body: JSON.stringify({
+    //            name,email, password ,location
+    //        })
+    //    })
+    //    const json = await response.json();
+    //    if (json.success) {
+    //        setisuserLoggedIn(true)
+    //        localStorage.setItem('jwtToken', json.jwtToken)
+    //    } else {
+    //        if (typeof (json.error) === 'object') {
+    //             //alert(json.error[0].msg)
+    //            return;
+    //        }
+    //        //alert(json.error)
+     //   }
+    //}
+    //// ROUTE 2 : USER LOG IN
+    //const userlogIn = async ( email, password) => {
+    //    const response = await fetch(`${host}/api/user/login`, {
+    //        method: 'POST',
+    //        headers: {
+    //            Accept: "application/json",
+    //            "Content-Type": "application/json",
+    //            "Access-Control-Allow-Credentials": true
+    //        },
+    //        body: JSON.stringify({
+    //             email, password
+    //        })
+    //    })
+    //    const json = await response.json();
+    //    if (json.success) {
+    //        setisuserLoggedIn(true)
+    //        localStorage.setItem('jwtToken', json.jwtToken)
+    //    } else {
+    //        if (typeof (json.error) === 'object') {
+    //            alert(json.error[0].msg)
+    //            return;
+    //        }
+    //        alert(json.error)
+    //    }
+    //}
+
+    
+
 
     // ROUTE 3 : USER ORDER
-    const userPlaceOrder = async ( amount , status , serviceid ) => {
+    const userPlaceOrder = async ( amount , status , serviceid, creatorId ,paidUser,razorpayPaymentId , razorpayOrderId , razorpaySignature  ) => {
         const response = await fetch(`${host}/api/user/service/neworder/${serviceid}`, {
             method: 'POST',
             headers: {
@@ -70,15 +71,18 @@ const UserState = (props) => {
                 'jwt-token': localStorage.getItem('jwtToken')
             },
             body: JSON.stringify({
-                amount , status 
+                amount , status , razorpayPaymentId , razorpayOrderId , razorpaySignature 
             })
         })
-        await fetch(`${host}/api/services/addDownload/${serviceid}`)
         const json = await response.json();
+        if(json.success){
+            const res2 = await addSubscriber(creatorId,paidUser)
+            return json.success
+        }
+        else{
+            return json.success
+        }
 
-        // TODO: CHANGE THE ISPAID TYPE TO DYNAMIC LATER
-        await addSubscriber(serviceid , 0)
-        return json.success
     }
 
     const addSubscriber = async (id , isPaid) => { // USER LOGIN IS REQUIRED
@@ -94,8 +98,9 @@ const UserState = (props) => {
                 isPaid : isPaid
             })
         })
+
+        
         const res = await response.json()
-        console.log(res)
         return res.success
     }
 
@@ -110,17 +115,34 @@ const UserState = (props) => {
                 "jwt-token": localStorage.getItem('jwtToken')
             },
             body: JSON.stringify({
-                id:id
+                id:id?.toString()
             })
         })
         const res = await response.json()
-        setcheck(res.success)
+        return res.success
     }
 
 
 
+    // get user details 
+    const getUserDetails = async () => { // USER LOGIN IS REQUIRED
+        const response = await fetch(`${host}/api/user/getUserDetails`, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Credentials": true,
+                "jwt-token": localStorage.getItem('jwtToken')
+            },
+            
+        })
+        const json = await response.json()
+        return json
+    }
+
+
     return (
-        <userContext.Provider value={{ check,isuserLoggedIn,checkSubscriber, userSignup, userlogIn, userPlaceOrder, addSubscriber }}>
+        <userContext.Provider value={{checkSubscriber, userPlaceOrder, addSubscriber,getUserDetails }}>
             {props.children}
         </userContext.Provider>
     )

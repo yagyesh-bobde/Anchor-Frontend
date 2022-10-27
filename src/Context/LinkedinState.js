@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { host } from "../config/config";
+import { toast } from "react-toastify";
 
 export const linkedinContext = createContext();
 
@@ -8,7 +9,8 @@ const LinkedinState = (props) => {
   const navigate = useNavigate();
   const [loginInfo, setloginInfo] = useState({});
 
-  const loginCreator = async () => {
+
+  const creatorLinkedinLogin = async () => {
     fetch(`${host}/login/creator/success`, {
       method: "GET",
       credentials: "include",
@@ -25,17 +27,60 @@ const LinkedinState = (props) => {
         if (resJSON.success) {
           const login = resJSON.res;
           setloginInfo(login);
-          registerCreatorLogin(login.id, login.name, login.email, login.photo);
+          registerCreatorLogin(login.id,"", login.name, login.email, login.photo);
         } else {
+          toast.error("Login Failed! Please Try Again", {
+            position: "top-center",
+            autoClose: 1500,
+          });
           navigate("/login/creators");
         }
       })
       .catch((error) => {
+        toast.error("Login Failed! Please Try Again", {
+          position: "top-center",
+          autoClose: 1500,
+        });
         navigate("/login/creators");
       });
   };
 
-  const registerCreatorLogin = async (linkedinID, name, email, photo, slug) => {
+  const creatorGoogleLogin = async () => {
+    fetch(`${host}/google/login/success`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((resJson) => {
+        if (resJson.success) {
+          const login = resJson.res;
+          setloginInfo(login);
+          registerCreatorLogin("", login.id, login.name, login.email, login.photo);
+        } else {
+          toast.error("Login Failed! Please Try Again", {
+            position: "top-center",
+            autoClose: 1500,
+          });
+          navigate("/login/creators");
+        }
+      })
+      .catch((error) => {
+        toast.error("Login Failed! Please Try Again", {
+          position: "top-center",
+          autoClose: 1500,
+        });
+        navigate("/login/creators");
+      });
+  };
+
+  const registerCreatorLogin = async (linkedinID,googleID, name, email, photo) => {
     let slugurl = name.split(" ").join("-");
     const count = await getslugcountcreator(slugurl.toLowerCase());
     let slugurl2 =
@@ -52,6 +97,7 @@ const LinkedinState = (props) => {
       },
       body: JSON.stringify({
         linkedinID,
+        googleID,
         name,
         email,
         photo,
@@ -60,11 +106,23 @@ const LinkedinState = (props) => {
     });
     const res = await response.json();
     if (res.success) {
-      localStorage.setItem("jwtToken", res.jwtToken);
+      const status = await getStatus(res.jwtToken);
+      if (status === 1) {
+        localStorage.setItem("jwtToken", res.jwtToken);
+        localStorage.setItem("c_id", res.slug);
+        navigate("/dashboard");
+      } else {
+        navigate("/waitlist");
+      }
     } else {
+      toast.error("Login Failed! Please Try Again", {
+        position: "top-center",
+        autoClose: 1500,
+      });
       navigate("/login/creators");
     }
   };
+
   // get slug count for creator
   const getslugcountcreator = async (slug) => {
     const response = await fetch(`${host}/api/creator/getslugcount`, {
@@ -83,8 +141,26 @@ const LinkedinState = (props) => {
     }
   };
 
+  // get status of a creator
+  const getStatus = async (jwtToken) => {
+    const response = await fetch(`${host}/api/creator/getstatus`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "jwt-token": jwtToken,
+      },
+    });
+    const json = await response.json();
+    if (json.success) {
+      return json.res.status;
+    } else {
+      console.log(json.error);
+    }
+  };
+
   const usergooglelogin = async () => {
-    console.log("login google");
     fetch(`${host}/google/login/success`, {
       method: "GET",
       credentials: "include",
@@ -100,19 +176,25 @@ const LinkedinState = (props) => {
       .then((resJson) => {
         if (resJson.success) {
           const login = resJson.res;
+          localStorage.setItem("user", login.name);
           setloginInfo(login);
           registerUserLogin(login.id, login.name, login.email, login.photo);
         } else {
-          throw Error("400 Bad Request");
+          toast.error("Login Failed! Please Try Again", {
+            position: "top-center",
+            autoClose: 1500,
+          });
         }
       })
       .catch((error) => {
-        console.log(error);
+        toast.error("Login Failed! Please Try Again", {
+          position: "top-center",
+          autoClose: 1500,
+        });
       });
   };
 
   const loginlinkedinUser = async () => {
-    console.log("login user");
     fetch(`${host}/login/user/success`, {
       method: "GET",
       credentials: "include",
@@ -126,21 +208,28 @@ const LinkedinState = (props) => {
         return response.json();
       })
       .then((resJson) => {
-        console.log(resJson);
         if (resJson.success) {
           const login = resJson.res;
+          localStorage.setItem("user", login.name);
           setloginInfo(login);
           registerUserLogin(login.id, login.name, login.email, login.photo);
         } else {
-          throw Error("400 Bad Request");
+          toast.error("Login Failed! Please Try Again", {
+            position: "top-center",
+            autoClose: 1500,
+          });
         }
       })
       .catch((error) => {
-        console.log(error);
+        toast.error("Login Failed! Please Try Again", {
+          position: "top-center",
+          autoClose: 1500,
+        });
       });
   };
 
   const registerUserLogin = async (id, name, email, photo) => {
+    const userdata = await userIp();
     const response = await fetch(`${host}/api/user/newUser`, {
       method: "POST",
       headers: {
@@ -154,6 +243,7 @@ const LinkedinState = (props) => {
         name,
         email,
         photo,
+        location: userdata,
       }),
     });
     localStorage.removeItem("from");
@@ -161,15 +251,66 @@ const LinkedinState = (props) => {
     if (res.success) {
       localStorage.setItem("isUser", true);
       localStorage.setItem("jwtToken", res.jwtToken);
-      // navigate(url)
+      navigate(localStorage.getItem("url"));
+      
     } else {
-      navigate(`${localStorage.getItem("url")}`);
+      toast.error("Login Failed! Please Try Again", {
+        position: "top-center",
+        autoClose: 1500,
+      });
     }
+  };
+
+
+  
+
+  // Route : GET user IP ADDRESS and location
+  const userIp = async () => {
+    const response = await fetch(
+      "https://api64.ipify.org/?format=json"
+      //method:"GET",
+      //mode:"no-cors",
+      //headers: {
+      //  Accept: "application/json",
+      //  "Access-Control-Allow-Credentials": true
+      //}
+    );
+    const json = await response.json();
+    const loc = await userLocData(json.ip);
+
+    const data = {
+      ip: loc.ip,
+      city: loc.city,
+      country: loc.country_name,
+      latitude: loc.latitude,
+      longitude: loc.longitude,
+    };
+    return data;
+  };
+
+  const userLocData = async (ip) => {
+    const response = await fetch(
+      `https://ipapi.co/${ip}/json/`
+      //method:"GET",
+      //mode:"no-cors",
+      //headers: {
+      //  Accept: "application/json",
+      //  "Access-Control-Allow-Credentials": true
+    );
+    const json = await response.json();
+    return json;
   };
 
   return (
     <linkedinContext.Provider
-      value={{ usergooglelogin, loginlinkedinUser, loginCreator, loginInfo }}
+      value={{
+        usergooglelogin,
+        loginlinkedinUser,
+        creatorLinkedinLogin,
+        creatorGoogleLogin,
+        getStatus,
+        loginInfo,
+      }}
     >
       {props.children}
     </linkedinContext.Provider>

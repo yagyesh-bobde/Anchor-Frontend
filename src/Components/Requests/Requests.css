@@ -1,0 +1,16 @@
+.request_table_head{
+    width: 106%;
+    background-color: #eeeeee;
+    display: grid;
+    grid-template-columns: 8% 20% 30% 20% 20%;
+    height: 63px;
+    align-items: center;
+    font-size: 17px;
+    border-radius: 5px;
+    color: rgba(46, 43, 43, 0.808);
+    margin-bottom: 15px;
+}
+
+.request_table_head span{
+    text-align: center;
+}

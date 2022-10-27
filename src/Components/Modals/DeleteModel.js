@@ -4,27 +4,30 @@ import ServiceContext from "../../Context/services/serviceContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function Delete_Model({ id, open, onClose,progress }) {
+function Delete_Model({ id, open, onClose,progress,status }) {
   const context = useContext(ServiceContext);
   const { deleteService } = context;
 
   const handleDelete = async () => {
     progress(0)
-    await deleteService(id, "63147d9f812fdbad1e6fc185");
-    //toast.success("Deletion Successfull",{
-    //  position: "top-center",
-    //    autoClose: 3000,
-    //})
+    const success = await deleteService(id,status);
+    if(success){
+      toast.success("Status Changed Successfull",{
+        position: "top-center",
+          autoClose: 2000,
+      })
+    }
+    else{
+      toast.error("Some error occured",{
+        position: "top-center", 
+          autoClose: 2000,
+      })
+
+    }
     progress(100)
+    window.location.reload()
   };
-  //toast.promise(
-  //  handleDelete,
-  //  {
-  //    pending: 'Promise is pending',
-  //    success: 'Promise resolved 👌',
-  //    error: 'Promise rejected 🤯'
-  //  }
-  //)
+
 
   if (!open) {
     return null;
@@ -33,19 +36,20 @@ function Delete_Model({ id, open, onClose,progress }) {
   return (
     <>
     <div onClick={onClose} className="model">
-      <div className="model_main_box">
+      <div onClick={(e)=>e.stopPropagation()} className="model_main_box">
         <span className="model_question">
-          Are you sure you want to delete service?
+          Are you sure you want to change the status to {status==0?<b>"OFF"</b>:<b>"ON"</b>}?
         </span>
         <span className="model_gyan">
-          Your fans will not able to access this service any more after that.
+          {status === 0 ?
+          <>This will prevent your fans from accessing the service.</> : <>This will allow your fans to access the service.</> }
         </span>
         <div className="model_buttons">
           <button className="model_button" onClick={handleDelete}>
-            Delete
+            Save Changes
           </button>
           <button className="model_button" onClick={onClose}>
-            Don't Delete
+            Cancel
           </button>
         </div>
       </div>

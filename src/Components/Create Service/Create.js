@@ -4,51 +4,92 @@ import ServiceContext from "../../Context/services/serviceContext";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Editor from "../Editor/Editor";
+import { LoadTwo } from "../Modals/Loading";
+
 
 function Create(props) {
   const context = useContext(ServiceContext);
   const navigate = useNavigate();
-  const { slugCount, getslugcount,addservice, Uploadfile } = context;
-
+  const { slugCount, getslugcount, addservice, Uploadfile,checkCpyUrl } = context;
+  const [openLoading, setOpenLoading] = useState(false)
   const [previewSourceOne, setPreviewSourceOne] = useState(""); // saves the data of file selected in the form
   const [previewSourceTwo, setPreviewSourceTwo] = useState(""); // saves the data of file selected in the form
+  const [copyURL, setCopyURL] = useState(""); // saves the data of file selected in the form
+  const [Content, setContent] = useState("Please describe your service briefly..")
   const [data, setdata] = useState({
     sname: "",
     sdesc: "",
-    ldesc: "",
-    slug:"",
+    slug: "",
     smrp: 0,
     ssp: 0,
-    sbanner: "",
-    sdoc: "",
   });
 
+  // genrating copy url string
+
+   const generateCopyURL = async () =>{
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < 2; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    checkCpyUrl(result).then((check)=>{
+      if(check){
+        setCopyURL(result)
+      }
+      else{
+        generateCopyURL()
+      }
+    })
+  }
+
+   /// TAGS section ------------------------------------------------------------------------
+
+  const [tags, setTags] = useState(["JavaScript"])
+
+  const handleKeyDown = (e) =>{
+    if(e.key !== "Enter") return
+    const value = e.target.value
+    if(!value.trim()) return
+    setTags([...tags, value])
+    e.target.value = ""
+  }
+
+  const removeTag = (index) =>{
+    setTags(tags.filter((e,i) => i !== index))
+  }
+
+  // use effect to genrate slug and copy url-----------------------------------------------
+
   useEffect(() => {
-    let slug = data.sname.split(" ").join("-")
-    setdata({ ...data, slug: slug })
-    getslugcount(slug.toLowerCase())
+    generateCopyURL();
+    let slug = data.sname.split(" ").join("-");
+    setdata({ ...data, slug: slug });
+    getslugcount(slug.toLowerCase());
 
     // eslint-disable-next-line
-  }, [data.sname])
-  
+  }, [data.sname]);
+
+
+  // uploading file using file input -------------------------------------------
 
   const handleChangeFileOne = (e) => {
-
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPreviewSourceOne(reader.result);
-    };
+    setPreviewSourceOne(file);
   };
   const handleChangeFileTwo = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setPreviewSourceTwo(reader.result);
-    };
+    setPreviewSourceTwo(file);
   };
+
+  const data1 = new FormData();
+  const data2 = new FormData();
+  data1.append("file", previewSourceOne);
+  data2.append("file", previewSourceTwo);
+
+
+  // Changing free and paid section layout ---------------------------------------------
 
   const handleOptionChange = () => {
     //  balancing the changing effect of free and paid option
@@ -68,11 +109,9 @@ function Create(props) {
     }
   };
 
-  // Auto resize of textare
-  const textarea = document.querySelector("#ldesc");
-  textarea?.addEventListener("input", autoResize, false);
+  // Auto resize of textarea    -------------------------------------------
 
-  const textarea2 = document.querySelector("#sdesc");
+   const textarea2 = document.querySelector("#sdesc");
   textarea2?.addEventListener("input", autoResize, false);
 
   function autoResize() {
@@ -80,76 +119,95 @@ function Create(props) {
     this.style.height = this.scrollHeight + "px";
   }
 
-  // Submit of form
+  // Submit of form create the service ------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setOpenLoading(true)
     props.progress(0);
     if (
       data.sname.length > 3 &&
       data.sdesc.length > 5 &&
-      data.ldesc.length > 10 &&
+      Content.length > 10 &&
       previewSourceOne &&
-      previewSourceTwo 
+      previewSourceTwo
     ) {
-      try {
-        toast.loading("Please wait...",{
-          position: "top-center"
-        })
+      try {    
         const select = document.getElementById("stype");
         var value = select.options[select.selectedIndex].value;
-        var banner = await Uploadfile(previewSourceOne);
-        var doc = await Uploadfile(previewSourceTwo);
-        props.progress(75);
-        await addservice(
-          data.sname,
-          data.sdesc,
-          data.ldesc,
-          slugCount ===0?data.slug.toLowerCase():data.slug.toLowerCase().concat("--",`${slugCount}`),
-          banner.upload_file.secure_url,
-          doc.upload_file.secure_url,
-          0,
-          value === "free" ? false : true,
-          value === "free" ? 0 : data.smrp,
-          value === "free" ? 0 : data.ssp
-        );
-        setdata({
-          sname: "",
-          sdesc: "",
-          ldesc: "",
-          smrp: 0,
-          slug:"",
-          ssp: 0,
-          sbanner: "",
-          sdoc: "",
-        });
-        navigate("/creator_profile");
+        var banner = await Uploadfile(data1);
+        var doc = await Uploadfile(data2);
+        if (banner.success && doc.success) {
+          props.progress(75);
+          const json = await addservice(
+            data.sname,
+            data.sdesc,
+            Content,
+            slugCount === 0
+              ? data.slug.toLowerCase()
+              : data.slug.toLowerCase().concat("--", `${slugCount + 1}`),
+            copyURL,
+            banner.url,
+            doc.url,
+            tags,
+            0,
+            value === "free" ? false : true,
+            value === "free" ? 0 : data.smrp,
+            value === "free" ? 0 : data.ssp
+          );
+          if (json.success) {
+            setdata({
+              sname: "",
+              sdesc: "",
+              smrp: 0,
+              slug: "",
+              ssp: 0,
+              sbanner: "",
+              sdoc: "",
+            });
+            setOpenLoading(false)
+            navigate(`/c/${localStorage.getItem("c_id")}`);
+          } else {
+            setOpenLoading(false)
+            toast.error(`Service Not Added Please Try Again`, {
+              position: "top-center",
+              autoClose: 2000,
+            });
+          }
+        } else {
+          setOpenLoading(false)
+          toast.error(`Service Not Added please Try Again`, {
+            position: "top-center",
+            autoClose: 2000,
+          });
+        }
+    
       } catch (error) {
-        toast.error(`Service Not Added: ${error.message}`, {
+        setOpenLoading(false)
+        toast.error(`Server side error please try after some time`, {
           position: "top-center",
-          autoClose: 4000,
+          autoClose: 2000,
         });
       }
     } else {
-      toast.info("Mandatory fields cannot be empty", {
+      setOpenLoading(false)
+      toast.info("Mandatory fields cannot be empty or short in size", {
         position: "top-center",
         autoClose: 3000,
       });
     }
-    
-    props.progress(100)
-    
+
+    props.progress(100);
   };
 
-
-  // Change in values of input tags
+  // Change in values of input tags ---------------------------------------------------------------------
   const handleChange = (e) => {
     setdata({ ...data, [e.target.name]: e.target.value });
   };
 
   return (
     <>
+    {openLoading && <LoadTwo open={openLoading} />}
       <div className="create_box">
-      
         <h1>Create Service</h1>
         <form className="entries" onSubmit={handleSubmit}>
           <div>
@@ -175,16 +233,6 @@ function Create(props) {
                 id="sdesc"
                 placeholder="Please catchy line to download..."
               />
-              <label htmlFor="ldesc" className="entry_labels">
-                Long Description <small>*</small>
-              </label>
-              <textarea
-                name="ldesc"
-                onChange={handleChange}
-                value={data.ldesc}
-                id="ldesc"
-                placeholder="Please describe your service briefly..."
-              />
               <label htmlFor="sbanner" className="entry_labels">
                 Banner Image <small>*</small>
               </label>
@@ -199,6 +247,7 @@ function Create(props) {
                 onChange={handleChangeFileOne}
               />
             </div>
+
             <div className="right_entry_box">
               <label htmlFor="stype" className="entry_labels">
                 Service Type <small>*</small>
@@ -233,25 +282,43 @@ function Create(props) {
               />
 
               <label htmlFor="sdoc" className="entry_labels">
-                Document ( supported .pdf) <small>*</small>
+                Document ( supported .pdf only) <small>*</small>
               </label>
               <input
                 type="text"
                 name="sdoc"
                 id="sdoc"
+                accept="application/pdf"
                 placeholder="Upload file..."
                 onFocus={(e) => {
                   e.target.type = "file";
                 }}
                 onChange={handleChangeFileTwo}
               />
-            </div>
-          </div>
 
-          <button className="submit_button" type="submit">
+            <label htmlFor="stags" className="entry_labels">
+                Tags(Write a tag and press Enter)
+              </label>
+                <div className="tag-container">
+                  {tags?.map((tag,index)=>{
+                    return (<div className="tag" key={index}>
+                    <span>{tag}</span>
+                    <i class="fa-solid fa-circle-xmark" onClick={()=> removeTag(index)}></i>  
+                  </div>) 
+                  })}
+                    <input type="text" onKeyDown={handleKeyDown} name="stags" id="stags" placeholder="Type tags..."/>
+                </div>
+            </div>
+
+          </div>
+        </form>
+          <label htmlFor="ldesc" className="editor_entry_labels">
+            Long Description <small>*</small>
+          </label>
+        <Editor readOnly = {false} content={Content} setContent={setContent} className="text_editor"/>
+          <button className="submit_button" onClick={handleSubmit}>
             Submit and Publish
           </button>
-        </form>
         <ToastContainer />
       </div>
     </>
